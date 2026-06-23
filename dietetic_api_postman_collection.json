@@ -1,13 +1,30 @@
 {
   "info": {
     "_postman_id": "6456290d-be06-41ed-bda2-7ad120722e11",
-    "name": "Dietetic API - Consulta Dietética",
+    "name": "Dietetic API - Consulta Dietética Completa",
     "description": "Colección completa para importar en Postman y probar los endpoints del backend de la aplicación de Consultas Dietéticas.\n\n### Configuración de Autenticación:\nLa colección utiliza autenticación heredada a nivel de colección (`Bearer {{token}}`). Las variables de colección `token` y `refresh_token` se actualizan automáticamente al registrarse o iniciar sesión mediante un script de prueba (`Post-response script`).",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "45096526",
-    "_collection_link": "https://go.postman.co/collection/45096526-6456290d-be06-41ed-bda2-7ad120722e11?source=collection_link"
+    "_exporter_id": "45096526"
   },
   "item": [
+    {
+      "name": "00. Health Check",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/health/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health", ""]
+            },
+            "description": "Verifica que el backend esté funcionando correctamente."
+          },
+          "response": []
+        }
+      ]
+    },
     {
       "name": "01. Autenticación y Usuarios",
       "item": [
@@ -31,31 +48,18 @@
             }
           ],
           "request": {
-            "auth": {
-              "type": "noauth"
-            },
+            "auth": {"type": "noauth"},
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"nutri_ana\",\n  \"email\": \"ana.gomez@dietetic.com\",\n  \"password\": \"Segura123.\",\n  \"password2\": \"Segura123.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": {"raw": {"language": "json"}}
             },
             "url": {
               "raw": "{{base_url}}/api/auth/register/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "register",
-                ""
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", ""]
             },
             "description": "Registra un nuevo usuario en la plataforma y devuelve el token de acceso inicial."
           },
@@ -71,41 +75,28 @@
                 "exec": [
                   "var jsonData = pm.response.json();",
                   "if (jsonData.access) {",
-                  "    pm.environment.set(\"token\", jsonData.access);",
+                  "    pm.collectionVariables.set(\"token\", jsonData.access);",
                   "}",
                   "if (jsonData.refresh) {",
-                  "    pm.environment.set(\"refresh_token\", jsonData.refresh);",
+                  "    pm.collectionVariables.set(\"refresh_token\", jsonData.refresh);",
                   "}"
                 ]
               }
             }
           ],
           "request": {
-            "auth": {
-              "type": "noauth"
-            },
+            "auth": {"type": "noauth"},
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"username\": \"nutri_ana\",\n  \"password\": \"Segura123.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": {"raw": {"language": "json"}}
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "login",
-                ""
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login", ""]
             },
             "description": "Autentica al usuario y guarda el token JWT en las variables de la colección."
           },
@@ -128,32 +119,18 @@
             }
           ],
           "request": {
-            "auth": {
-              "type": "noauth"
-            },
+            "auth": {"type": "noauth"},
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": {"raw": {"language": "json"}}
             },
             "url": {
               "raw": "{{base_url}}/api/auth/token/refresh/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "token",
-                "refresh",
-                ""
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "token", "refresh", ""]
             },
             "description": "Genera un nuevo token de acceso a partir de un token de refresco válido."
           },
@@ -162,32 +139,18 @@
         {
           "name": "Verificar Token",
           "request": {
-            "auth": {
-              "type": "noauth"
-            },
+            "auth": {"type": "noauth"},
             "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
               "raw": "{\n  \"token\": \"{{token}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": {"raw": {"language": "json"}}
             },
             "url": {
               "raw": "{{base_url}}/api/auth/token/verify/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "token",
-                "verify",
-                ""
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "token", "verify", ""]
             },
             "description": "Verifica si el token actual de acceso sigue siendo válido."
           },
@@ -201,25 +164,54 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": {"raw": {"language": "json"}}
             },
             "url": {
               "raw": "{{base_url}}/api/auth/logout/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "auth",
-                "logout",
-                ""
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout", ""]
             },
             "description": "Cierra la sesión y añade el token de refresco a la lista negra (blacklist)."
+          },
+          "response": []
+        },
+        {
+          "name": "Solicitar Recuperación de Contraseña",
+          "request": {
+            "auth": {"type": "noauth"},
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana.gomez@dietetic.com\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/password-reset/request/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "password-reset", "request", ""]
+            },
+            "description": "Envía un correo con instrucciones para restablecer la contraseña."
+          },
+          "response": []
+        },
+        {
+          "name": "Confirmar Recuperación de Contraseña",
+          "request": {
+            "auth": {"type": "noauth"},
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uidb64\": \"...\",\n  \"token\": \"...\",\n  \"new_password\": \"NuevaContraseña123!\",\n  \"new_password_confirm\": \"NuevaContraseña123!\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/password-reset/confirm/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "password-reset", "confirm", ""]
+            },
+            "description": "Restablece la contraseña utilizando el uid y token recibidos por correo."
           },
           "response": []
         },
@@ -230,15 +222,8 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/users/profile/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "profile",
-                ""
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "profile", ""]
             },
             "description": "Obtiene los detalles del perfil del usuario actualmente autenticado."
           },
@@ -252,23 +237,12 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"email\": \"ana.gomez.new@dietetic.com\",\n  \"first_name\": \"Ana\",\n  \"last_name\": \"Gómez\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": {"raw": {"language": "json"}}
             },
             "url": {
               "raw": "{{base_url}}/api/users/profile/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "profile",
-                ""
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "profile", ""]
             },
             "description": "Permite al usuario logueado actualizar de forma parcial sus datos personales (email, nombre, apellido)."
           },
@@ -282,23 +256,12 @@
             "body": {
               "mode": "raw",
               "raw": "{\n  \"current_password\": \"Segura123.\",\n  \"new_password\": \"Segura1234.\",\n  \"new_password2\": \"Segura1234.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "options": {"raw": {"language": "json"}}
             },
             "url": {
               "raw": "{{base_url}}/api/users/change-password/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "change-password",
-                ""
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", "change-password", ""]
             },
             "description": "Cambia la contraseña del usuario logueado, requiriendo verificar la contraseña actual."
           },
@@ -311,77 +274,11 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/users/?is_staff=true",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                ""
-              ],
-              "query": [
-                {
-                  "key": "is_staff",
-                  "value": "true"
-                },
-                {
-                  "key": "search",
-                  "value": "ana",
-                  "disabled": true
-                }
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", ""],
+              "query": [{"key": "is_staff", "value": "true"}]
             },
             "description": "Lista los usuarios de la base de datos (Requiere rol Admin)."
-          },
-          "response": []
-        },
-        {
-          "name": "Alternar Estado Activo (Admin)",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/users/:id/toggle-active/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                ":id",
-                "toggle-active",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "2",
-                  "description": "ID del usuario a activar/desactivar"
-                }
-              ]
-            },
-            "description": "Activa o desactiva a un usuario mediante su ID (Requiere rol Admin)."
-          },
-          "response": []
-        },
-        {
-          "name": "Estadísticas de Usuarios (Admin)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/users/stats/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "users",
-                "stats",
-                ""
-              ]
-            },
-            "description": "Obtiene la cantidad total, activos, inactivos y staff de usuarios (Requiere rol Admin)."
           },
           "response": []
         }
@@ -397,28 +294,14 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/pacientes/?status=activo&search=Carlos",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "pacientes",
-                ""
-              ],
+              "host": ["{{base_url}}"],
+              "path": ["api", "pacientes", ""],
               "query": [
-                {
-                  "key": "status",
-                  "value": "activo",
-                  "description": "Filtrar por estado: activo, en_seguimiento, inactivo"
-                },
-                {
-                  "key": "search",
-                  "value": "Carlos",
-                  "description": "Buscar por código, nombre completo o meta"
-                }
+                {"key": "status", "value": "activo", "description": "Filtrar por estado"},
+                {"key": "search", "value": "Carlos", "description": "Buscar por nombre, código"}
               ]
             },
-            "description": "Obtiene la lista paginada de pacientes con soporte de filtros y búsquedas."
+            "description": "Obtiene la lista paginada de pacientes con filtros y búsqueda."
           },
           "response": []
         },
@@ -426,33 +309,18 @@
           "name": "Crear Paciente",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"patient_code\": \"PAC-2026-001\",\n  \"full_name\": \"Carlos Mendoza\",\n  \"age\": 32,\n  \"goal\": \"Bajar porcentaje de grasa corporal\",\n  \"dietary_restrictions\": \"Intolerancia a la lactosa, evita cebolla cruda\",\n  \"current_weight\": 84.50,\n  \"height_cm\": 175.00,\n  \"status\": \"activo\",\n  \"medical_notes\": \"Tiene antecedentes de hipertensión familiar ligera\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n  \"patient_code\": \"PAC-2026-001\",\n  \"full_name\": \"Carlos Mendoza\",\n  \"age\": 32,\n  \"goal\": \"Bajar porcentaje de grasa corporal\",\n  \"dietary_restrictions\": \"Intolerancia a la lactosa\",\n  \"current_weight\": 84.50,\n  \"height_cm\": 175.00,\n  \"status\": \"activo\"\n}",
+              "options": {"raw": {"language": "json"}}
             },
             "url": {
               "raw": "{{base_url}}/api/pacientes/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "pacientes",
-                ""
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "pacientes", ""]
             },
-            "description": "Crea un nuevo expediente de paciente (Solo lectura o escritura según rol de staff)."
+            "description": "Crea un nuevo expediente de paciente."
           },
           "response": []
         },
@@ -463,91 +331,11 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/pacientes/:id/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "pacientes",
-                ":id",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "pacientes", ":id", ""],
+              "variable": [{"key": "id", "value": "1"}]
             },
-            "description": "Obtiene la información detallada de un paciente específico, incluyendo su IMC (bmi) calculado y lista de seguimientos."
-          },
-          "response": []
-        },
-        {
-          "name": "Actualizar Paciente",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"patient_code\": \"PAC-2026-001\",\n  \"full_name\": \"Carlos Mendoza Restrepo\",\n  \"age\": 33,\n  \"goal\": \"Bajar grasa corporal y mejorar rendimiento\",\n  \"dietary_restrictions\": \"Intolerancia a la lactosa\",\n  \"current_weight\": 82.10,\n  \"height_cm\": 175.00,\n  \"status\": \"en_seguimiento\",\n  \"medical_notes\": \"Presión arterial normalizada tras control\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/api/pacientes/:id/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "pacientes",
-                ":id",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Actualiza todos los campos de un paciente."
-          },
-          "response": []
-        },
-        {
-          "name": "Eliminar Paciente",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/pacientes/:id/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "pacientes",
-                ":id",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Elimina el registro de un paciente por su ID."
+            "description": "Obtiene la información detallada de un paciente específico."
           },
           "response": []
         }
@@ -563,22 +351,11 @@
             "header": [],
             "url": {
               "raw": "{{base_url}}/api/nutricionistas/?is_active=true",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "nutricionistas",
-                ""
-              ],
-              "query": [
-                {
-                  "key": "is_active",
-                  "value": "true"
-                }
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "nutricionistas", ""],
+              "query": [{"key": "is_active", "value": "true"}]
             },
-            "description": "Obtiene la lista de nutricionistas registrados en el sistema."
+            "description": "Obtiene la lista de nutricionistas registrados."
           },
           "response": []
         },
@@ -586,341 +363,56 @@
           "name": "Crear Nutricionista",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"first_name\": \"Sofía\",\n  \"last_name\": \"Mendoza\",\n  \"professional_id\": \"PROF-987654\",\n  \"specialty\": \"Nutrición Clínica y Obesidad\",\n  \"consultation_fee\": 180.00,\n  \"consultations_completed\": 12,\n  \"is_active\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n  \"first_name\": \"Sofía\",\n  \"last_name\": \"Mendoza\",\n  \"professional_id\": \"PROF-987654\",\n  \"specialty\": \"Nutrición Clínica\",\n  \"consultation_fee\": 180.00,\n  \"is_active\": true\n}",
+              "options": {"raw": {"language": "json"}}
             },
             "url": {
               "raw": "{{base_url}}/api/nutricionistas/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "nutricionistas",
-                ""
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "nutricionistas", ""]
             },
-            "description": "Registra un nuevo nutricionista con su tarifa y especialidad."
-          },
-          "response": []
-        },
-        {
-          "name": "Obtener Nutricionista por ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/nutricionistas/:id/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "nutricionistas",
-                ":id",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Obtiene los detalles del nutricionista y sus tarifas calculadas con bono."
-          },
-          "response": []
-        },
-        {
-          "name": "Actualizar Nutricionista",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"first_name\": \"Sofía Elena\",\n  \"last_name\": \"Mendoza Rivas\",\n  \"professional_id\": \"PROF-987654\",\n  \"specialty\": \"Nutrición Clínica y Deportiva\",\n  \"consultation_fee\": 200.00,\n  \"consultations_completed\": 13,\n  \"is_active\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/api/nutricionistas/:id/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "nutricionistas",
-                ":id",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Edita toda la información del perfil del nutricionista."
-          },
-          "response": []
-        },
-        {
-          "name": "Eliminar Nutricionista",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/nutricionistas/:id/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "nutricionistas",
-                ":id",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Elimina el registro de un nutricionista."
+            "description": "Registra un nuevo nutricionista."
           },
           "response": []
         }
       ]
     },
     {
-      "name": "04. Planes Nutricionales",
+      "name": "04. Categorías de Alimentos",
       "item": [
         {
-          "name": "Listar Planes Nutricionales",
+          "name": "Listar Categorías",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/planes/?is_active=true&search=KETO",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "planes",
-                ""
-              ],
-              "query": [
-                {
-                  "key": "is_active",
-                  "value": "true"
-                },
-                {
-                  "key": "search",
-                  "value": "KETO"
-                }
-              ]
+              "raw": "{{base_url}}/api/categorias-alimentos/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categorias-alimentos", ""]
             },
-            "description": "Lista los planes de alimentación disponibles."
+            "description": "Obtiene todas las categorías de alimentos."
           },
           "response": []
         },
         {
-          "name": "Crear Plan Nutricional",
+          "name": "Crear Categoría",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Plan KETO Básico\",\n  \"description\": \"Plan bajo en carbohidratos enfocado en grasas saludables y proteínas de alta calidad.\",\n  \"goal\": \"Pérdida de peso y cetosis\",\n  \"target_calories\": 1600,\n  \"duration_weeks\": 6,\n  \"estimated_cost\": 350.00,\n  \"is_active\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n  \"name\": \"Proteínas\",\n  \"description\": \"Alimentos ricos en proteínas magras\"\n}",
+              "options": {"raw": {"language": "json"}}
             },
             "url": {
-              "raw": "{{base_url}}/api/planes/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "planes",
-                ""
-              ]
+              "raw": "{{base_url}}/api/categorias-alimentos/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categorias-alimentos", ""]
             },
-            "description": "Crea un nuevo plan alimenticio (El nombre debe ser único, validado insensible a mayúsculas)."
-          },
-          "response": []
-        },
-        {
-          "name": "Obtener Plan Nutricional por ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/planes/:id/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "planes",
-                ":id",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Obtiene detalles y contadores asociados a un plan nutricional específico."
-          },
-          "response": []
-        },
-        {
-          "name": "Actualizar Plan Nutricional",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Plan KETO Básico Modificado\",\n  \"description\": \"Plan bajo en carbohidratos enfocado en grasas saludables con reajuste proteico.\",\n  \"goal\": \"Pérdida de peso acelerada\",\n  \"target_calories\": 1500,\n  \"duration_weeks\": 8,\n  \"estimated_cost\": 380.00,\n  \"is_active\": true\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/api/planes/:id/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "planes",
-                ":id",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Modifica un plan nutricional existente."
-          },
-          "response": []
-        },
-        {
-          "name": "Ver Alimentos Activos del Plan",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/planes/:id/alimentos/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "planes",
-                ":id",
-                "alimentos",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Devuelve la lista ordenada y paginada de alimentos activos pertenecientes a un plan en particular."
-          },
-          "response": []
-        },
-        {
-          "name": "Estadísticas de Planes Nutricionales",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/planes/stats/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "planes",
-                "stats",
-                ""
-              ]
-            },
-            "description": "Obtiene métricas de cuántos planes están activos, cuántos inactivos y el número de alimentos de cada uno."
-          },
-          "response": []
-        },
-        {
-          "name": "Eliminar Plan Nutricional",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/planes/:id/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "planes",
-                ":id",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Elimina un plan nutricional."
+            "description": "Crea una nueva categoría de alimentos."
           },
           "response": []
         }
@@ -930,39 +422,17 @@
       "name": "05. Alimentos Programados",
       "item": [
         {
-          "name": "Listar Alimentos Programados",
+          "name": "Listar Alimentos",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/alimentos/?is_active=true&plan_nutricional=1",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "alimentos",
-                ""
-              ],
-              "query": [
-                {
-                  "key": "is_active",
-                  "value": "true"
-                },
-                {
-                  "key": "plan_nutricional",
-                  "value": "1",
-                  "description": "Filtrar por plan"
-                },
-                {
-                  "key": "meal_type",
-                  "value": "desayuno",
-                  "description": "desayuno, almuerzo, cena, snack",
-                  "disabled": true
-                }
-              ]
+              "raw": "{{base_url}}/api/alimentos/?plan_nutricional=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "alimentos", ""],
+              "query": [{"key": "plan_nutricional", "value": "1"}]
             },
-            "description": "Retorna la lista de alimentos programados ordenados de forma predeterminada por secuencia."
+            "description": "Lista los alimentos programados, filtrados por plan nutricional."
           },
           "response": []
         },
@@ -970,222 +440,181 @@
           "name": "Crear Alimento",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Huevos Revueltos con Aguacate\",\n  \"description\": \"Dos huevos revueltos preparados con aceite de coco, acompañados de medio aguacate.\",\n  \"meal_type\": \"desayuno\",\n  \"portion_grams\": 150.00,\n  \"sequence\": 1,\n  \"is_active\": true,\n  \"plan_nutricional_id\": 1\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n  \"name\": \"Pechuga de Pollo a la Parrilla\",\n  \"description\": \"Pechuga de pollo magra sin piel\",\n  \"meal_type\": \"almuerzo\",\n  \"portion_grams\": 150.00,\n  \"sequence\": 1,\n  \"categoria_alimento\": 1,\n  \"plan_nutricional\": 1,\n  \"is_active\": true\n}",
+              "options": {"raw": {"language": "json"}}
             },
             "url": {
               "raw": "{{base_url}}/api/alimentos/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "alimentos",
-                ""
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "alimentos", ""]
             },
-            "description": "Registra un alimento dentro de un plan nutricional activo."
-          },
-          "response": []
-        },
-        {
-          "name": "Obtener Alimento por ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/alimentos/:id/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "alimentos",
-                ":id",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Obtiene la información detallada de un alimento y los minutos estimados de preparación."
-          },
-          "response": []
-        },
-        {
-          "name": "Actualizar Alimento",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Huevos Revueltos con Aguacate y Espinaca\",\n  \"description\": \"Dos huevos revueltos preparados con una taza de espinacas y aceite de coco, acompañados de medio aguacate.\",\n  \"meal_type\": \"desayuno\",\n  \"portion_grams\": 180.00,\n  \"sequence\": 1,\n  \"is_active\": true,\n  \"plan_nutricional_id\": 1\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/api/alimentos/:id/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "alimentos",
-                ":id",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Permite modificar un alimento programado."
-          },
-          "response": []
-        },
-        {
-          "name": "Actualizar Orden / Secuencia (Admin)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"sequence\": 3\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/api/alimentos/:id/update-order/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "alimentos",
-                ":id",
-                "update-order",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Actualiza la secuencia de un alimento por su ID (Debe ser un entero positivo, requiere rol Admin)."
-          },
-          "response": []
-        },
-        {
-          "name": "Ver Alimentos Disponibles (Abierto)",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/alimentos/available/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "alimentos",
-                "available",
-                ""
-              ]
-            },
-            "description": "Retorna una versión reducida de alimentos que están activos (Accesible sin token)."
-          },
-          "response": []
-        },
-        {
-          "name": "Estadísticas de Alimentos",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/alimentos/stats/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "alimentos",
-                "stats",
-                ""
-              ]
-            },
-            "description": "Devuelve agregaciones del tamaño de porciones (promedio, máximo, mínimo) y recuento total de alimentos activos y deshabilitados."
-          },
-          "response": []
-        },
-        {
-          "name": "Eliminar Alimento",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/alimentos/:id/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "alimentos",
-                ":id",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Elimina un alimento programado."
+            "description": "Registra un nuevo alimento en un plan."
           },
           "response": []
         }
       ]
     },
     {
-      "name": "06. Consultas Dietéticas",
+      "name": "06. Planes Nutricionales",
+      "item": [
+        {
+          "name": "Listar Planes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/planes/?is_active=true",
+              "host": ["{{base_url}}"],
+              "path": ["api", "planes", ""],
+              "query": [{"key": "is_active", "value": "true"}]
+            },
+            "description": "Lista todos los planes nutricionales activos."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Plan",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Plan Básico de Pérdida de Peso\",\n  \"description\": \"Plan equilibrado bajo en calorías\",\n  \"goal\": \"Pérdida de peso\",\n  \"target_calories\": 1600,\n  \"duration_weeks\": 8,\n  \"estimated_cost\": 250.00,\n  \"is_active\": true\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/planes/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "planes", ""]
+            },
+            "description": "Crea un nuevo plan nutricional."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "07. Días del Plan",
+      "item": [
+        {
+          "name": "Listar Días del Plan",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/dias-plan/?plan_nutricional=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "dias-plan", ""],
+              "query": [{"key": "plan_nutricional", "value": "1"}]
+            },
+            "description": "Obtiene los días asociados a un plan nutricional."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Día del Plan",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plan_nutricional\": 1,\n  \"nombre_dia\": \"Lunes\",\n  \"orden\": 1\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/dias-plan/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "dias-plan", ""]
+            },
+            "description": "Crea un día dentro del plan nutricional."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "08. Momentos de Comida",
+      "item": [
+        {
+          "name": "Listar Momentos de Comida",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/momentos-comida/?dia_plan=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "momentos-comida", ""],
+              "query": [{"key": "dia_plan", "value": "1"}]
+            },
+            "description": "Muestra los momentos de comida para un día específico."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Momento de Comida",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dia_plan\": 1,\n  \"nombre_momento\": \"Desayuno\",\n  \"orden\": 1\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/momentos-comida/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "momentos-comida", ""]
+            },
+            "description": "Añade un momento de comida (desayuno, almuerzo, cena, snack)."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "09. Detalles del Plan (Alimentos x Momento)",
+      "item": [
+        {
+          "name": "Listar Detalles del Plan",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/detalles-alimentos-plan/?momento_comida=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "detalles-alimentos-plan", ""],
+              "query": [{"key": "momento_comida", "value": "1"}]
+            },
+            "description": "Ver alimentos asignados a un momento de comida."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Detalle del Plan",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"momento_comida\": 1,\n  \"alimento_programado\": 1,\n  \"cantidad_gramos\": 150,\n  \"orden\": 1\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/detalles-alimentos-plan/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "detalles-alimentos-plan", ""]
+            },
+            "description": "Asigna un alimento programado a un momento del día con su gramaje."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "10. Consultas Dietéticas",
       "item": [
         {
           "name": "Listar Consultas",
@@ -1193,388 +622,698 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/api/consultas/?status=programada",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "consultas",
-                ""
-              ],
-              "query": [
-                {
-                  "key": "status",
-                  "value": "programada",
-                  "description": "programada, en_curso, completada, retrasada, cancelada"
-                },
-                {
-                  "key": "paciente",
-                  "value": "1",
-                  "disabled": true
-                },
-                {
-                  "key": "nutricionista",
-                  "value": "1",
-                  "disabled": true
-                }
-              ]
+              "raw": "{{base_url}}/api/consultas/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "consultas", ""]
             },
-            "description": "Lista las consultas dietéticas. Si es usuario común (Paciente), solo verá las suyas; si es staff o admin, verá todas."
+            "description": "Lista todas las consultas (staff/admin) o solo las propias (paciente)."
           },
           "response": []
         },
         {
-          "name": "Ver Mis Consultas",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/consultas/mine/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "consultas",
-                "mine",
-                ""
-              ]
-            },
-            "description": "Obtiene las consultas asociadas directamente al usuario autenticado (Filtra por paciente__user)."
-          },
-          "response": []
-        },
-        {
-          "name": "Crear Consulta Dietética",
+          "name": "Crear Consulta",
           "request": {
             "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
+            "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"status\": \"programada\",\n  \"session_notes\": \"Sesión de control inicial para evaluar plan alimenticio y metas.\",\n  \"scheduled_time\": \"2026-06-15T15:00:00Z\",\n  \"estimated_end\": \"2026-06-15T16:00:00Z\",\n  \"plan_nutricional\": 1,\n  \"nutricionista\": 1,\n  \"paciente\": 1\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
+              "raw": "{\n  \"status\": \"programada\",\n  \"session_notes\": \"Consulta inicial\",\n  \"scheduled_time\": \"2026-07-01T10:00:00Z\",\n  \"estimated_end\": \"2026-07-01T11:00:00Z\",\n  \"plan_nutricional\": 1,\n  \"paciente\": 1,\n  \"nutricionista\": 1\n}",
+              "options": {"raw": {"language": "json"}}
             },
             "url": {
               "raw": "{{base_url}}/api/consultas/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "consultas",
-                ""
-              ]
+              "host": ["{{base_url}}"],
+              "path": ["api", "consultas", ""]
             },
-            "description": "Crea una cita para consulta dietética asociando un paciente, nutricionista y plan nutricional."
-          },
-          "response": []
-        },
-        {
-          "name": "Obtener Consulta por ID",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/consultas/:id/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "consultas",
-                ":id",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Obtiene el detalle completo de una consulta, incluyendo detalles anidados del plan, nutricionista y la duración estimada en minutos."
-          },
-          "response": []
-        },
-        {
-          "name": "Actualizar Consulta",
-          "request": {
-            "method": "PUT",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"programada\",\n  \"session_notes\": \"Sesión de control inicial reprogramada y adaptada.\",\n  \"scheduled_time\": \"2026-06-16T10:00:00Z\",\n  \"estimated_end\": \"2026-06-16T11:00:00Z\",\n  \"plan_nutricional\": 1,\n  \"nutricionista\": 1,\n  \"paciente\": 1\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/api/consultas/:id/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "consultas",
-                ":id",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Permite modificar por completo los datos de una consulta."
-          },
-          "response": []
-        },
-        {
-          "name": "Agregar Nota de Sesión",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"notes\": \"Se sugiere integrar 150g extra de verduras de hoja verde al almuerzo y revisar tolerancia a la lactosa.\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/api/consultas/:id/add-session-note/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "consultas",
-                ":id",
-                "add-session-note",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Añade o sobreescribe las notas clínicas de la consulta de forma rápida."
-          },
-          "response": []
-        },
-        {
-          "name": "Iniciar Consulta",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/consultas/:id/start-consultation/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "consultas",
-                ":id",
-                "start-consultation",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Pone el estado de una consulta 'programada' en estado 'en_curso'."
-          },
-          "response": []
-        },
-        {
-          "name": "Actualizar Estado (Admin)",
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/json"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"status\": \"retrasada\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{base_url}}/api/consultas/:id/update-status/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "consultas",
-                ":id",
-                "update-status",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Permite al administrador cambiar forzosamente el estado de una consulta (Requiere rol Admin)."
-          },
-          "response": []
-        },
-        {
-          "name": "Estadísticas de Consultas (Admin)",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/consultas/stats/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "consultas",
-                "stats",
-                ""
-              ]
-            },
-            "description": "Obtiene agregados cuantitativos agrupados por los diferentes estados disponibles."
-          },
-          "response": []
-        },
-        {
-          "name": "Eliminar Consulta",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{base_url}}/api/consultas/:id/",
-              "host": [
-                "{{base_url}}"
-              ],
-              "path": [
-                "api",
-                "consultas",
-                ":id",
-                ""
-              ],
-              "variable": [
-                {
-                  "key": "id",
-                  "value": "1"
-                }
-              ]
-            },
-            "description": "Elimina una consulta."
+            "description": "Programa una nueva consulta dietética."
           },
           "response": []
         }
       ]
     },
     {
-      "name": "07. Health Check",
-      "request": {
-        "auth": {
-          "type": "noauth"
+      "name": "11. Evaluaciones Antropométricas",
+      "item": [
+        {
+          "name": "Listar Evaluaciones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/evaluaciones-antropometricas/?consulta=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "evaluaciones-antropometricas", ""],
+              "query": [{"key": "consulta", "value": "1"}]
+            },
+            "description": "Muestra las evaluaciones de peso, altura y medidas para una consulta."
+          },
+          "response": []
         },
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "{{base_url}}/api/health/",
-          "host": [
-            "{{base_url}}"
-          ],
-          "path": [
-            "api",
-            "health",
-            ""
-          ]
+        {
+          "name": "Crear Evaluación",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"consulta\": 1,\n  \"peso\": 84.5,\n  \"altura\": 175,\n  \"grasa_corporal_porcentaje\": 22.5,\n  \"masa_muscular_kg\": 35.0\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/evaluaciones-antropometricas/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "evaluaciones-antropometricas", ""]
+            },
+            "description": "Registra una nueva evaluación antropométrica."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "12. Notas de Consulta",
+      "item": [
+        {
+          "name": "Listar Notas de Consulta",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/notas-consulta/?consulta=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notas-consulta", ""],
+              "query": [{"key": "consulta", "value": "1"}]
+            },
+            "description": "Ver notas clínicas de una consulta."
+          },
+          "response": []
         },
-        "description": "Endpoint público para verificar que el servidor del backend de Dietética esté levantado y respondiendo correctamente."
-      },
-      "response": []
+        {
+          "name": "Crear Nota de Consulta",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"consulta\": 1,\n  \"diagnostico\": \"Paciente en buen estado inicial\",\n  \"observaciones\": \"Se sugiere aumentar el consumo de agua\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/notas-consulta/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notas-consulta", ""]
+            },
+            "description": "Guarda una nota clínica para una consulta."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "13. Historial Clínico",
+      "item": [
+        {
+          "name": "Listar Historiales Clínicos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/historiales-clinicos/?paciente=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "historiales-clinicos", ""],
+              "query": [{"key": "paciente", "value": "1"}]
+            },
+            "description": "Obtiene el historial médico del paciente."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Historial Clínico",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente\": 1,\n  \"alergias\": \"Nueces, mariscos\",\n  \"enfermedades_cronicas\": \"Ninguna\",\n  \"antecedentes_familiares\": \"Diabetes en abuelo materno\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/historiales-clinicos/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "historiales-clinicos", ""]
+            },
+            "description": "Registra antecedentes médicos del paciente."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "14. Progreso Fotos",
+      "item": [
+        {
+          "name": "Listar Fotos de Progreso",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/progresos-fotos/?paciente=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "progresos-fotos", ""],
+              "query": [{"key": "paciente", "value": "1"}]
+            },
+            "description": "Ver galería de fotos de progreso del paciente."
+          },
+          "response": []
+        },
+        {
+          "name": "Subir Foto de Progreso",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {"key": "paciente", "value": "1"},
+                {"key": "descripcion", "value": "Foto inicial"},
+                {"key": "foto", "type": "file", "src": ""}
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/progresos-fotos/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "progresos-fotos", ""]
+            },
+            "description": "Sube una imagen al progreso fotográfico."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "15. Seguimiento Consumo",
+      "item": [
+        {
+          "name": "Listar Seguimiento de Consumo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/seguimientos-consumo/?paciente=1&fecha=2026-07-01",
+              "host": ["{{base_url}}"],
+              "path": ["api", "seguimientos-consumo", ""],
+              "query": [
+                {"key": "paciente", "value": "1"},
+                {"key": "fecha", "value": "2026-07-01"}
+              ]
+            },
+            "description": "Ver si el paciente completó cada momento de comida."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Seguimiento de Consumo",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente\": 1,\n  \"momento_comida\": 1,\n  \"fecha\": \"2026-07-01\",\n  \"completado\": true,\n  \"notas\": \"Me sentí satisfecho\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/seguimientos-consumo/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "seguimientos-consumo", ""]
+            },
+            "description": "Marca un momento de comida como completado."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "16. Registro Agua",
+      "item": [
+        {
+          "name": "Listar Registros de Agua",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/registros-agua/?paciente=1&fecha=2026-07-01",
+              "host": ["{{base_url}}"],
+              "path": ["api", "registros-agua", ""],
+              "query": [
+                {"key": "paciente", "value": "1"},
+                {"key": "fecha", "value": "2026-07-01"}
+              ]
+            },
+            "description": "Ver consumo diario de agua del paciente."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Registro de Agua",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente\": 1,\n  \"fecha\": \"2026-07-01\",\n  \"cantidad_ml\": 500\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/registros-agua/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "registros-agua", ""]
+            },
+            "description": "Añade un vaso o botella de agua al registro."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "17. Rutinas de Ejercicio",
+      "item": [
+        {
+          "name": "Listar Rutinas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/rutinas-ejercicio/?plan_nutricional=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rutinas-ejercicio", ""],
+              "query": [{"key": "plan_nutricional", "value": "1"}]
+            },
+            "description": "Ver rutinas de ejercicio asociadas al plan."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Rutina",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plan_nutricional\": 1,\n  \"descripcion_rutina\": \"Caminar 10,000 pasos\",\n  \"dias_semana\": \"Lunes, Miércoles, Viernes\",\n  \"duracion_minutos\": 60\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/rutinas-ejercicio/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rutinas-ejercicio", ""]
+            },
+            "description": "Añade una nueva rutina de ejercicio al plan."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "18. Registro Ejercicio",
+      "item": [
+        {
+          "name": "Listar Registros de Ejercicio",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/registros-ejercicio/?paciente=1&fecha=2026-07-01",
+              "host": ["{{base_url}}"],
+              "path": ["api", "registros-ejercicio", ""],
+              "query": [
+                {"key": "paciente", "value": "1"},
+                {"key": "fecha", "value": "2026-07-01"}
+              ]
+            },
+            "description": "Verificar cumplimiento de rutinas de ejercicio."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Registro de Ejercicio",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente\": 1,\n  \"rutina_ejercicio\": 1,\n  \"fecha\": \"2026-07-01\",\n  \"completado\": true\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/registros-ejercicio/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "registros-ejercicio", ""]
+            },
+            "description": "Marca una rutina de ejercicio como completada."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "19. Sintomas Diarios",
+      "item": [
+        {
+          "name": "Listar Sintomas Diarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/sintomas-diarios/?paciente=1&fecha=2026-07-01",
+              "host": ["{{base_url}}"],
+              "path": ["api", "sintomas-diarios", ""],
+              "query": [
+                {"key": "paciente", "value": "1"},
+                {"key": "fecha", "value": "2026-07-01"}
+              ]
+            },
+            "description": "Ver estado diario del paciente (ánimo, energía, dolores)."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Sintoma Diario",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente\": 1,\n  \"fecha\": \"2026-07-01\",\n  \"sintoma\": \"BUENA_ENERGIA\",\n  \"notas\": \"Dormí muy bien\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/sintomas-diarios/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "sintomas-diarios", ""]
+            },
+            "description": "Registra cómo se sentía el paciente ese día."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "20. Horarios Nutricionista",
+      "item": [
+        {
+          "name": "Listar Horarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/horarios-nutricionista/?nutricionista=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "horarios-nutricionista", ""],
+              "query": [{"key": "nutricionista", "value": "1"}]
+            },
+            "description": "Ver disponibilidad horaria del nutricionista."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Horario",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nutricionista\": 1,\n  \"dia_semana\": \"LUN\",\n  \"hora_inicio\": \"08:00:00\",\n  \"hora_fin\": \"12:00:00\",\n  \"is_active\": true\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/horarios-nutricionista/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "horarios-nutricionista", ""]
+            },
+            "description": "Define un bloque horario disponible del nutricionista."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "21. Mensajes Chat",
+      "item": [
+        {
+          "name": "Listar Mensajes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/mensajes-chat/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "mensajes-chat", ""]
+            },
+            "description": "Historial de mensajes entre paciente y nutricionista."
+          },
+          "response": []
+        },
+        {
+          "name": "Enviar Mensaje",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remitente\": 1,\n  \"destinatario\": 2,\n  \"contenido\": \"Hola, tengo una duda sobre la dieta\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/mensajes-chat/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "mensajes-chat", ""]
+            },
+            "description": "Envía un nuevo mensaje en el chat."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "22. Notificaciones Push",
+      "item": [
+        {
+          "name": "Listar Notificaciones",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/notificaciones-push/?paciente=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notificaciones-push", ""],
+              "query": [{"key": "paciente", "value": "1"}]
+            },
+            "description": "Ver notificaciones pendientes o leídas del paciente."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Notificación",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente\": 1,\n  \"titulo\": \"Recordatorio\",\n  \"mensaje\": \"¡No olvides tu consulta mañana!\",\n  \"leido\": false,\n  \"fecha_envio\": \"2026-06-30T18:00:00Z\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/notificaciones-push/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notificaciones-push", ""]
+            },
+            "description": "Envía una notificación al paciente."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "23. Facturas Pago",
+      "item": [
+        {
+          "name": "Listar Facturas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/facturas-pago/?consulta=1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "facturas-pago", ""],
+              "query": [{"key": "consulta", "value": "1"}]
+            },
+            "description": "Ver facturas asociadas a consultas."
+          },
+          "response": []
+        },
+        {
+          "name": "Crear Factura",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"consulta\": 1,\n  \"monto\": 180.00,\n  \"estado_pago\": \"pendiente\"\n}",
+              "options": {"raw": {"language": "json"}}
+            },
+            "url": {
+              "raw": "{{base_url}}/api/facturas-pago/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "facturas-pago", ""]
+            },
+            "description": "Genera una factura para una consulta."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "14. Prueba de Correos y Perfiles",
+      "item": [
+        {
+          "name": "14.1 Ver Mi Perfil de Usuario (UserProfile)",
+          "request": {
+            "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]},
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/api/profiles/", "host": ["{{base_url}}"], "path": ["api", "profiles"]},
+            "description": "Obtiene el UserProfile con role y avatar"
+          },
+          "response": []
+        },
+        {
+          "name": "14.2 Listar Horarios de Nutricionista",
+          "request": {
+            "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]},
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/api/horarios-nutricionista/", "host": ["{{base_url}}"], "path": ["api", "horarios-nutricionista"]},
+            "description": "Obtiene todos los horarios"
+          },
+          "response": []
+        },
+        {
+          "name": "14.3 Crear Horario",
+          "request": {
+            "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]},
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nutricionista\": {{nutricionista_id}},\n  \"dia_semana\": \"LUN\",\n  \"hora_inicio\": \"09:00:00\",\n  \"hora_fin\": \"17:00:00\",\n  \"is_active\": true\n}"
+            },
+            "url": {"raw": "{{base_url}}/api/horarios-nutricionista/", "host": ["{{base_url}}"], "path": ["api", "horarios-nutricionista"]},
+            "description": "Crea un horario para un nutricionista"
+          },
+          "response": []
+        },
+        {
+          "name": "14.4 Listar Sintomas Diarios",
+          "request": {
+            "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]},
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/api/sintomas-diarios/", "host": ["{{base_url}}"], "path": ["api", "sintomas-diarios"]},
+            "description": "Obtiene los sintomas diarios"
+          },
+          "response": []
+        },
+        {
+          "name": "14.5 Crear Sintoma Diario",
+          "request": {
+            "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]},
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente\": {{paciente_id}},\n  \"fecha\": \"2026-07-01\",\n  \"sintoma\": \"BUENA_ENERGIA\",\n  \"notas\": \"Me sentí muy bien hoy\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/api/sintomas-diarios/", "host": ["{{base_url}}"], "path": ["api", "sintomas-diarios"]},
+            "description": "Registra un sintoma diario"
+          },
+          "response": []
+        },
+        {
+          "name": "14.6 Listar Registros de Ejercicio",
+          "request": {
+            "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]},
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/api/registros-ejercicio/", "host": ["{{base_url}}"], "path": ["api", "registros-ejercicio"]},
+            "description": "Obtiene los registros de ejercicio"
+          },
+          "response": []
+        },
+        {
+          "name": "14.7 Crear Registro de Ejercicio",
+          "request": {
+            "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]},
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente\": {{paciente_id}},\n  \"rutina_ejercicio\": 1,\n  \"fecha\": \"2026-07-01\",\n  \"completado\": true,\n  \"notas\": \"Cumplí con la rutina\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/api/registros-ejercicio/", "host": ["{{base_url}}"], "path": ["api", "registros-ejercicio"]},
+            "description": "Registra que se cumplió una rutina de ejercicio"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "13. Documentación API",
+      "item": [
+        {
+          "name": "Swagger UI",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/docs/swagger/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "docs", "swagger", ""]
+            },
+            "description": "Interfaz gráfica para probar la API (Swagger)."
+          },
+          "response": []
+        },
+        {
+          "name": "Redoc",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/api/docs/redoc/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "docs", "redoc", ""]
+            },
+            "description": "Documentación elegante en formato Redoc."
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "auth": {
     "type": "bearer",
-    "bearer": [
-      {
-        "key": "token",
-        "value": "{{token}}",
-        "type": "string"
-      }
-    ]
+    "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]
   },
   "event": [
     {
       "listen": "prerequest",
-      "script": {
-        "type": "text/javascript",
-        "exec": [
-          ""
-        ]
-      }
+      "script": {"type": "text/javascript", "exec": [""]}
     },
     {
       "listen": "test",
-      "script": {
-        "type": "text/javascript",
-        "exec": [
-          ""
-        ]
-      }
+      "script": {"type": "text/javascript", "exec": [""]}
     }
   ],
   "variable": [
-    {
-      "key": "base_url",
-      "value": "http://127.0.0.1:8000"
-    },
-    {
-      "key": "token",
-      "value": ""
-    },
-    {
-      "key": "refresh_token",
-      "value": ""
-    }
+    {"key": "base_url", "value": "http://127.0.0.1:8000", "type": "string"},
+    {"key": "token", "value": "", "type": "string"},
+    {"key": "refresh_token", "value": "", "type": "string"},
+    {"key": "paciente_id", "value": "", "type": "string"},
+    {"key": "nutricionista_id", "value": "", "type": "string"},
+    {"key": "plan_id", "value": "", "type": "string"}
   ]
 }

@@ -1,0 +1,12 @@
+¡Bienvenido {{ username }}!
+
+Gracias por unirte a Dietética App. Estamos muy felices de tenerte con nosotros.
+
+Tu cuenta ha sido creada exitosamente. Ahora puedes:
+- Acceder a planes nutricionales personalizados
+- Seguir tu progreso diario
+- Comunicarte con tu nutricionista
+
+¡Esperamos que tengas una experiencia increíble!
+
+© 2026 Dietética App. Todos los derechos reservados.

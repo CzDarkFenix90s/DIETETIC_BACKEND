@@ -1,6 +1,7 @@
 # dietetic/models/alimento_programado.py
 from django.db import models
 from .plan_nutricional import PlanNutricional
+from .categoria_alimento import CategoriaAlimento
 
 
 class AlimentoProgramado(models.Model):
@@ -17,6 +18,13 @@ class AlimentoProgramado(models.Model):
     meal_type          = models.CharField(max_length=20, choices=MEAL_CHOICES, default='desayuno')
     sequence           = models.PositiveIntegerField(default=1)
     is_active          = models.BooleanField(default=True)
+    categoria_alimento = models.ForeignKey(
+        CategoriaAlimento,
+        on_delete=models.PROTECT,
+        related_name='alimentos_programados',
+        null=True,
+        blank=True
+    )
     plan_nutricional   = models.ForeignKey(
         PlanNutricional,
         on_delete=models.PROTECT,

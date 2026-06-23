@@ -1,0 +1,318 @@
+{
+  "info": {
+    "_postman_id": "87654321-abcd-1234-5678-abcdef123456",
+    "name": "Dietética API - COMPLETA 2026",
+    "description": "Colección completa para probar toda la API de Dietética. Incluye endpoints de autenticación, pacientes, planes nutricionales, y más.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "12345678"
+  },
+  "variable": [
+    {"key": "base_url", "value": "http://localhost:8000/api", "type": "string"},
+    {"key": "token", "value": "", "type": "string"},
+    {"key": "paciente_id", "value": "", "type": "string"},
+    {"key": "nutricionista_id", "value": "", "type": "string"},
+    {"key": "plan_id", "value": "", "type": "string"}
+  ],
+  "item": [
+    {
+      "name": "0. Health Check",
+      "item": [
+        {
+          "name": "Verificar Servidor",
+          "request": {"method": "GET", "url": {"raw": "{{base_url}}/health/", "host": ["{{base_url}}"], "path": ["health"]}, "description": "Comprueba que el servidor esté funcionando"},
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "1. Autenticación",
+      "item": [
+        {
+          "name": "1.1 Registrar Usuario",
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["var jsonData = pm.response.json();", "if (jsonData.access) { pm.collectionVariables.set('token', jsonData.access); }", "if (jsonData.refresh) { pm.collectionVariables.set('refresh_token', jsonData.refresh); }"]}}],
+          "request": {"auth": {"type": "noauth"}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"username\": \"testuser\",\n  \"email\": \"test@example.com\",\n  \"password\": \"testpass123\",\n  \"password2\": \"testpass123\"\n}"}, "url": {"raw": "{{base_url}}/auth/register/", "host": ["{{base_url}}"], "path": ["auth", "register"]}, "description": "Crea un nuevo usuario y envía un correo de bienvenida"},
+          "response": []
+        },
+        {
+          "name": "1.2 Iniciar Sesión",
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["var jsonData = pm.response.json();", "if (jsonData.access) { pm.collectionVariables.set('token', jsonData.access); }", "if (jsonData.refresh) { pm.collectionVariables.set('refresh_token', jsonData.refresh); }"]}}],
+          "request": {"auth": {"type": "noauth"}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"username\": \"testuser\",\n  \"password\": \"testpass123\"\n}"}, "url": {"raw": "{{base_url}}/auth/login/", "host": ["{{base_url}}"], "path": ["auth", "login"]}, "description": "Inicia sesión y obtiene el token JWT"},
+          "response": []
+        },
+        {
+          "name": "1.3 Refrescar Token",
+          "request": {"auth": {"type": "noauth"}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"}, "url": {"raw": "{{base_url}}/auth/token/refresh/", "host": ["{{base_url}}"], "path": ["auth", "token", "refresh"]}, "description": "Refresca el token de acceso"},
+          "response": []
+        },
+        {
+          "name": "1.4 Cerrar Sesión",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}"}, "url": {"raw": "{{base_url}}/auth/logout/", "host": ["{{base_url}}"], "path": ["auth", "logout"]}, "description": "Cierra la sesión"},
+          "response": []
+        },
+        {
+          "name": "1.5 Recuperar Contraseña (Paso 1)",
+          "request": {"auth": {"type": "noauth"}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"email\": \"test@example.com\"\n}"}, "url": {"raw": "{{base_url}}/auth/password-reset/request/", "host": ["{{base_url}}"], "path": ["auth", "password-reset", "request"]}, "description": "Envía un correo con el link de recuperación"},
+          "response": []
+        },
+        {
+          "name": "1.6 Recuperar Contraseña (Paso 2)",
+          "request": {"auth": {"type": "noauth"}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"uidb64\": \"\",\n  \"token\": \"\",\n  \"new_password\": \"nuevapass123\",\n  \"new_password_confirm\": \"nuevapass123\"\n}"}, "url": {"raw": "{{base_url}}/auth/password-reset/confirm/", "host": ["{{base_url}}"], "path": ["auth", "password-reset", "confirm"]}, "description": "Valida el token y cambia la contraseña"},
+          "response": []
+        },
+        {
+          "name": "1.7 Ver Mi Perfil",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "GET", "url": {"raw": "{{base_url}}/users/profile/", "host": ["{{base_url}}"], "path": ["users", "profile"]}, "description": "Obtiene el perfil del usuario autenticado"},
+          "response": []
+        },
+        {
+          "name": "1.8 Actualizar Mi Perfil",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "PATCH", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"email\": \"nuevo@example.com\"\n}"}, "url": {"raw": "{{base_url}}/users/profile/", "host": ["{{base_url}}"], "path": ["users", "profile"]}, "description": "Actualiza el perfil"},
+          "response": []
+        },
+        {
+          "name": "1.9 Ver Mi Perfil de Usuario",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "GET", "url": {"raw": "{{base_url}}/profiles/", "host": ["{{base_url}}"], "path": ["profiles"]}, "description": "Obtiene el UserProfile (con role y avatar)"},
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Pacientes",
+      "item": [
+        {
+          "name": "2.1 Listar Pacientes",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "GET", "url": {"raw": "{{base_url}}/pacientes/", "host": ["{{base_url}}"], "path": ["pacientes"]}, "description": "Obtiene todos los pacientes"},
+          "response": []
+        },
+        {
+          "name": "2.2 Crear Paciente",
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["var jsonData = pm.response.json();", "if (jsonData.id) { pm.collectionVariables.set('paciente_id', jsonData.id); }"]}}],
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"patient_code\": \"PAC-001\",\n  \"first_name\": \"Juan\",\n  \"last_name\": \"Perez\",\n  \"age\": 30,\n  \"goal\": \"Pérdida de peso\",\n  \"current_weight\": 75.0,\n  \"height_cm\": 175.0,\n  \"status\": \"activo\"\n}"}, "url": {"raw": "{{base_url}}/pacientes/", "host": ["{{base_url}}"], "path": ["pacientes"]}, "description": "Crea un nuevo paciente"},
+          "response": []
+        },
+        {
+          "name": "2.3 Ver Paciente por ID",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "GET", "url": {"raw": "{{base_url}}/pacientes/{{paciente_id}}/", "host": ["{{base_url}}"], "path": ["pacientes", "{{paciente_id}}"]}, "description": "Obtiene un paciente por su ID"},
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "3. Nutricionistas",
+      "item": [
+        {
+          "name": "3.1 Listar Nutricionistas",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "GET", "url": {"raw": "{{base_url}}/nutricionistas/", "host": ["{{base_url}}"], "path": ["nutricionistas"]}, "description": "Obtiene todos los nutricionistas"},
+          "response": []
+        },
+        {
+          "name": "3.2 Crear Nutricionista",
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["var jsonData = pm.response.json();", "if (jsonData.id) { pm.collectionVariables.set('nutricionista_id', jsonData.id); }"]}}],
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"first_name\": \"María\",\n  \"last_name\": \"García\",\n  \"professional_id\": \"PROF-001\",\n  \"specialty\": \"Nutrición Clínica\",\n  \"consultation_fee\": 100.0,\n  \"is_active\": true\n}"}, "url": {"raw": "{{base_url}}/nutricionistas/", "host": ["{{base_url}}"], "path": ["nutricionistas"]}, "description": "Crea un nuevo nutricionista"},
+          "response": []
+        },
+        {
+          "name": "3.3 Listar Horarios de Nutricionista",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "GET", "url": {"raw": "{{base_url}}/horarios-nutricionista/?nutricionista={{nutricionista_id}}", "host": ["{{base_url}}"], "path": ["horarios-nutricionista"], "query": [{"key": "nutricionista", "value": "{{nutricionista_id}}"}]}, "description": "Obtiene los horarios del nutricionista"},
+          "response": []
+        },
+        {
+          "name": "3.4 Crear Horario",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"nutricionista\": {{nutricionista_id}},\n  \"dia_semana\": \"LUN\",\n  \"hora_inicio\": \"09:00:00\",\n  \"hora_fin\": \"17:00:00\",\n  \"is_active\": true\n}"}, "url": {"raw": "{{base_url}}/horarios-nutricionista/", "host": ["{{base_url}}"], "path": ["horarios-nutricionista"]}, "description": "Crea un nuevo horario"},
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. Planes Nutricionales",
+      "item": [
+        {
+          "name": "4.1 Listar Planes",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "GET", "url": {"raw": "{{base_url}}/planes/", "host": ["{{base_url}}"], "path": ["planes"]}, "description": "Obtiene todos los planes"},
+          "response": []
+        },
+        {
+          "name": "4.2 Crear Plan",
+          "event": [{"listen": "test", "script": {"type": "text/javascript", "exec": ["var jsonData = pm.response.json();", "if (jsonData.id) { pm.collectionVariables.set('plan_id', jsonData.id); }"]}}],
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"name\": \"Plan de Pérdida de Peso\",\n  \"description\": \"Plan equilibrado bajo en calorías\",\n  \"goal\": \"Pérdida de peso\",\n  \"target_calories\": 1800,\n  \"duration_weeks\": 12,\n  \"estimated_cost\": 200.0,\n  \"is_active\": true\n}"}, "url": {"raw": "{{base_url}}/planes/", "host": ["{{base_url}}"], "path": ["planes"]}, "description": "Crea un nuevo plan"},
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Categorías y Alimentos",
+      "item": [
+        {
+          "name": "5.1 Listar Categorías",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "GET", "url": {"raw": "{{base_url}}/categorias-alimentos/", "host": ["{{base_url}}"], "path": ["categorias-alimentos"]}, "description": "Obtiene todas las categorías"},
+          "response": []
+        },
+        {
+          "name": "5.2 Crear Categoría",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"name\": \"Proteínas\",\n  \"description\": \"Alimentos ricos en proteína\"\n}"}, "url": {"raw": "{{base_url}}/categorias-alimentos/", "host": ["{{base_url}}"], "path": ["categorias-alimentos"]}, "description": "Crea una categoría"},
+          "response": []
+        },
+        {
+          "name": "5.3 Listar Alimentos",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "GET", "url": {"raw": "{{base_url}}/alimentos/", "host": ["{{base_url}}"], "path": ["alimentos"]}, "description": "Obtiene todos los alimentos"},
+          "response": []
+        },
+        {
+          "name": "5.4 Crear Alimento",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"name\": \"Pechuga de Pollo\",\n  \"meal_type\": \"almuerzo\",\n  \"portion_grams\": 100,\n  \"sequence\": 1,\n  \"is_active\": true,\n  \"plan_nutricional\": {{plan_id}},\n  \"categoria_alimento\": 1\n}"}, "url": {"raw": "{{base_url}}/alimentos/", "host": ["{{base_url}}"], "path": ["alimentos"]}, "description": "Crea un alimento"},
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "6. Estructura del Plan (Días, Momentos, Detalles)",
+      "item": [
+        {
+          "name": "6.1 Crear Día del Plan",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"plan_nutricional\": {{plan_id}},\n  \"nombre_dia\": \"Lunes\",\n  \"orden\": 1\n}"}, "url": {"raw": "{{base_url}}/dias-plan/", "host": ["{{base_url}}"], "path": ["dias-plan"]}, "description": "Crea un día en el plan"},
+          "response": []
+        },
+        {
+          "name": "6.2 Crear Momento de Comida",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"dia_plan\": 1,\n  \"nombre_momento\": \"Desayuno\",\n  \"orden\": 1\n}"}, "url": {"raw": "{{base_url}}/momentos-comida/", "host": ["{{base_url}}"], "path": ["momentos-comida"]}, "description": "Crea un momento de comida"},
+          "response": []
+        },
+        {
+          "name": "6.3 Agregar Alimento al Momento",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"momento_comida\": 1,\n  \"alimento_programado\": 1,\n  \"cantidad_gramos\": 150,\n  \"orden\": 1\n}"}, "url": {"raw": "{{base_url}}/detalles-alimentos-plan/", "host": ["{{base_url}}"], "path": ["detalles-alimentos-plan"]}, "description": "Agrega un alimento a un momento"},
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "7. Consultas y Evaluaciones",
+      "item": [
+        {
+          "name": "7.1 Listar Consultas",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "GET", "url": {"raw": "{{base_url}}/consultas/", "host": ["{{base_url}}"], "path": ["consultas"]}, "description": "Obtiene todas las consultas"},
+          "response": []
+        },
+        {
+          "name": "7.2 Crear Consulta",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"status\": \"programada\",\n  \"scheduled_time\": \"2026-07-01T10:00:00Z\",\n  \"plan_nutricional\": {{plan_id}},\n  \"paciente\": {{paciente_id}},\n  \"nutricionista\": {{nutricionista_id}}\n}"}, "url": {"raw": "{{base_url}}/consultas/", "host": ["{{base_url}}"], "path": ["consultas"]}, "description": "Crea una consulta"},
+          "response": []
+        },
+        {
+          "name": "7.3 Crear Evaluación Antropométrica",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"consulta\": 1,\n  \"peso\": 75.0,\n  \"altura\": 175.0,\n  \"grasa_corporal_porcentaje\": 22.5,\n  \"masa_muscular_kg\": 35.0\n}"}, "url": {"raw": "{{base_url}}/evaluaciones-antropometricas/", "host": ["{{base_url}}"], "path": ["evaluaciones-antropometricas"]}, "description": "Crea una evaluación"},
+          "response": []
+        },
+        {
+          "name": "7.4 Crear Nota de Consulta",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"consulta\": 1,\n  \"diagnostico\": \"Todo bien\",\n  \"observaciones\": \"Seguir con el plan\"\n}"}, "url": {"raw": "{{base_url}}/notas-consulta/", "host": ["{{base_url}}"], "path": ["notas-consulta"]}, "description": "Crea una nota"},
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "8. Historial y Seguimiento",
+      "item": [
+        {
+          "name": "8.1 Crear Historial Clínico",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"paciente\": {{paciente_id}},\n  \"alergias\": \"Ninguna\",\n  \"enfermedades_cronicas\": \"Ninguna\",\n  \"antecedentes_familiares\": \"Ninguna\"\n}"}, "url": {"raw": "{{base_url}}/historiales-clinicos/", "host": ["{{base_url}}"], "path": ["historiales-clinicos"]}, "description": "Crea un historial"},
+          "response": []
+        },
+        {
+          "name": "8.2 Crear Seguimiento de Consumo",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"paciente\": {{paciente_id}},\n  \"momento_comida\": 1,\n  \"fecha\": \"2026-07-01\",\n  \"completado\": true,\n  \"notas\": \"Cumplido\"\n}"}, "url": {"raw": "{{base_url}}/seguimientos-consumo/", "host": ["{{base_url}}"], "path": ["seguimientos-consumo"]}, "description": "Marca un momento como cumplido"},
+          "response": []
+        },
+        {
+          "name": "8.3 Crear Registro de Agua",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"paciente\": {{paciente_id}},\n  \"fecha\": \"2026-07-01\",\n  \"cantidad_ml\": 500\n}"}, "url": {"raw": "{{base_url}}/registros-agua/", "host": ["{{base_url}}"], "path": ["registros-agua"]}, "description": "Registra consumo de agua"},
+          "response": []
+        },
+        {
+          "name": "8.4 Crear Sintoma Diario",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"paciente\": {{paciente_id}},\n  \"fecha\": \"2026-07-01\",\n  \"sintoma\": \"BUENA_ENERGIA\",\n  \"notas\": \"Me sentí bien\"\n}"}, "url": {"raw": "{{base_url}}/sintomas-diarios/", "host": ["{{base_url}}"], "path": ["sintomas-diarios"]}, "description": "Registra un síntoma diario"},
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "9. Rutinas y Ejercicio",
+      "item": [
+        {
+          "name": "9.1 Crear Rutina de Ejercicio",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"plan_nutricional\": {{plan_id}},\n  \"descripcion_rutina\": \"Caminar 10,000 pasos\",\n  \"dias_semana\": \"Lunes, Miércoles, Viernes\",\n  \"duracion_minutos\": 60\n}"}, "url": {"raw": "{{base_url}}/rutinas-ejercicio/", "host": ["{{base_url}}"], "path": ["rutinas-ejercicio"]}, "description": "Crea una rutina"},
+          "response": []
+        },
+        {
+          "name": "9.2 Crear Registro de Ejercicio",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"paciente\": {{paciente_id}},\n  \"rutina_ejercicio\": 1,\n  \"fecha\": \"2026-07-01\",\n  \"completado\": true,\n  \"notas\": \"Cumplido\"\n}"}, "url": {"raw": "{{base_url}}/registros-ejercicio/", "host": ["{{base_url}}"], "path": ["registros-ejercicio"]}, "description": "Marca una rutina como cumplida"},
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "10. Fotos de Progreso",
+      "item": [
+        {
+          "name": "10.1 Listar Fotos",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "GET", "url": {"raw": "{{base_url}}/progresos-fotos/?paciente={{paciente_id}}", "host": ["{{base_url}}"], "path": ["progresos-fotos"], "query": [{"key": "paciente", "value": "{{paciente_id}}"}]}, "description": "Obtiene las fotos del paciente"},
+          "response": []
+        },
+        {
+          "name": "10.2 Subir Foto (Form Data)",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "body": {"mode": "formdata", "formdata": [{"key": "paciente", "value": "{{paciente_id}}"}, {"key": "descripcion", "value": "Foto inicial"}, {"key": "foto", "type": "file", "src": ""}]}, "url": {"raw": "{{base_url}}/progresos-fotos/", "host": ["{{base_url}}"], "path": ["progresos-fotos"]}, "description": "Sube una foto de progreso"},
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "11. Comunicación",
+      "item": [
+        {
+          "name": "11.1 Enviar Mensaje",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"remitente\": 1,\n  \"destinatario\": 2,\n  \"contenido\": \"Hola, ¿cómo va el plan?\"\n}"}, "url": {"raw": "{{base_url}}/mensajes-chat/", "host": ["{{base_url}}"], "path": ["mensajes-chat"]}, "description": "Envía un mensaje"},
+          "response": []
+        },
+        {
+          "name": "11.2 Listar Notificaciones",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "GET", "url": {"raw": "{{base_url}}/notificaciones-push/?paciente={{paciente_id}}", "host": ["{{base_url}}"], "path": ["notificaciones-push"], "query": [{"key": "paciente", "value": "{{paciente_id}}"}]}, "description": "Obtiene las notificaciones"},
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "12. Facturas y Pagos",
+      "item": [
+        {
+          "name": "12.1 Crear Factura",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"consulta\": 1,\n  \"monto\": 100.0,\n  \"estado_pago\": \"pendiente\"\n}"}, "url": {"raw": "{{base_url}}/facturas-pago/", "host": ["{{base_url}}"], "path": ["facturas-pago"]}, "description": "Crea una factura"},
+          "response": []
+        },
+        {
+          "name": "12.2 Listar Facturas",
+          "request": {"auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]}, "method": "GET", "url": {"raw": "{{base_url}}/facturas-pago/", "host": ["{{base_url}}"], "path": ["facturas-pago"]}, "description": "Obtiene todas las facturas"},
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "13. Documentación API",
+      "item": [
+        {
+          "name": "13.1 Swagger UI",
+          "request": {"method": "GET", "url": {"raw": "http://localhost:8000/api/docs/swagger/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "docs", "swagger"]}, "description": "Abre Swagger UI en el navegador"},
+          "response": []
+        },
+        {
+          "name": "13.2 Redoc",
+          "request": {"method": "GET", "url": {"raw": "http://localhost:8000/api/docs/redoc/", "protocol": "http", "host": ["localhost"], "port": "8000", "path": ["api", "docs", "redoc"]}, "description": "Abre Redoc en el navegador"},
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]},
+  "event": [
+    {"listen": "prerequest", "script": {"type": "text/javascript", "exec": [""]}},
+    {"listen": "test", "script": {"type": "text/javascript", "exec": [""]}}
+  ]
+}
