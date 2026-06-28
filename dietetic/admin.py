@@ -5,7 +5,8 @@ from dietetic.models import (
     CategoriaAlimento, DiaPlan, MomentoComida, DetallePlanAlimento, EvaluacionAntropometrica,
     NotaConsulta, HistorialClinico, SeguimientoConsumo, RegistroAgua, ProgresoFoto,
     RutinaEjercicio, MensajeChat, NotificacionPush, FacturaPago, UserProfile,
-    HorarioNutricionista, SintomaDiario, RegistroEjercicio
+    HorarioNutricionista, SintomaDiario, RegistroEjercicio, PreferenciaAlimentaria,
+    ObjetivoPaciente, LogroPaciente
 )
 
 
@@ -51,6 +52,27 @@ class SintomaDiarioAdmin(admin.ModelAdmin):
 class RegistroEjercicioAdmin(admin.ModelAdmin):
     list_display = ['id', 'paciente', 'rutina_ejercicio', 'fecha', 'completado']
     list_filter = ['paciente', 'rutina_ejercicio', 'completado', 'fecha']
+
+
+@admin.register(PreferenciaAlimentaria)
+class PreferenciaAlimentariaAdmin(admin.ModelAdmin):
+    list_display = ['id', 'paciente', 'tipo_preferencia', 'fecha_registro']
+    list_filter = ['paciente', 'tipo_preferencia']
+    search_fields = ['paciente__first_name', 'paciente__last_name', 'descripcion']
+
+
+@admin.register(ObjetivoPaciente)
+class ObjetivoPacienteAdmin(admin.ModelAdmin):
+    list_display = ['id', 'paciente', 'objetivo', 'estado', 'fecha_inicio', 'fecha_meta']
+    list_filter = ['paciente', 'objetivo', 'estado']
+    search_fields = ['paciente__first_name', 'paciente__last_name']
+
+
+@admin.register(LogroPaciente)
+class LogroPacienteAdmin(admin.ModelAdmin):
+    list_display = ['id', 'paciente', 'nombre', 'fecha_logro']
+    list_filter = ['paciente', 'fecha_logro']
+    search_fields = ['paciente__first_name', 'paciente__last_name', 'nombre', 'descripcion']
 
 
 @admin.register(PlanNutricional)

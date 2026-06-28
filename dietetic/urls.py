@@ -29,6 +29,9 @@ from dietetic.views.user_profile import UserProfileViewSet
 from dietetic.views.horario_nutricionista import HorarioNutricionistaViewSet
 from dietetic.views.sintoma_diario import SintomaDiarioViewSet
 from dietetic.views.registro_ejercicio import RegistroEjercicioViewSet
+from dietetic.views.preferencia_alimentaria import PreferenciaAlimentariaViewSet
+from dietetic.views.objetivo_paciente import ObjetivoPacienteViewSet
+from dietetic.views.logro_paciente import LogroPacienteViewSet
 from dietetic.serializers.auth          import CustomTokenView
 
 router = DefaultRouter()
@@ -51,6 +54,9 @@ router.register('progresos-fotos', ProgresoFotoViewSet,         basename='progre
 router.register('rutinas-ejercicio', RutinaEjercicioViewSet,    basename='rutina-ejercicio')
 router.register('registros-ejercicio', RegistroEjercicioViewSet, basename='registro-ejercicio')
 router.register('sintomas-diarios', SintomaDiarioViewSet,        basename='sintoma-diario')
+router.register('preferencias-alimentarias', PreferenciaAlimentariaViewSet, basename='preferencia-alimentaria')
+router.register('objetivos-paciente', ObjetivoPacienteViewSet, basename='objetivo-paciente')
+router.register('logros-paciente', LogroPacienteViewSet, basename='logro-paciente')
 router.register('seguimientos-consumo', SeguimientoConsumoViewSet, basename='seguimiento-consumo')
 router.register('registros-agua',  RegistroAguaViewSet,         basename='registro-agua')
 router.register('mensajes-chat',   MensajeChatViewSet,          basename='mensaje-chat')

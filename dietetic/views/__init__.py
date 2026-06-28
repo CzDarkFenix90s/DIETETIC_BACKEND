@@ -7,3 +7,6 @@ from .consulta_dietetica import ConsultaDieteticaViewSet
 from .paciente import PacienteViewSet
 from .nutricionista import NutricionistaViewSet
 from .user import UserViewSet
+from .preferencia_alimentaria import PreferenciaAlimentariaViewSet
+from .objetivo_paciente import ObjetivoPacienteViewSet
+from .logro_paciente import LogroPacienteViewSet

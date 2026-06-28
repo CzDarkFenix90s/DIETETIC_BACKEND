@@ -1259,6 +1259,81 @@
             "description": "Registra que se cumplió una rutina de ejercicio"
           },
           "response": []
+        },
+        {
+          "name": "14.8 Listar Preferencias Alimentarias",
+          "request": {
+            "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]},
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/api/preferencias-alimentarias/", "host": ["{{base_url}}"], "path": ["api", "preferencias-alimentarias"]},
+            "description": "Obtiene las preferencias y restricciones alimentarias"
+          },
+          "response": []
+        },
+        {
+          "name": "14.9 Crear Preferencia Alimentaria",
+          "request": {
+            "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]},
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente\": {{paciente_id}},\n  \"tipo_preferencia\": \"SIN_GLUTEN\",\n  \"descripcion\": \"Intolerancia al gluten\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/api/preferencias-alimentarias/", "host": ["{{base_url}}"], "path": ["api", "preferencias-alimentarias"]},
+            "description": "Registra una preferencia, alergia o restricción alimentaria"
+          },
+          "response": []
+        },
+        {
+          "name": "14.10 Listar Objetivos del Paciente",
+          "request": {
+            "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]},
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/api/objetivos-paciente/", "host": ["{{base_url}}"], "path": ["api", "objetivos-paciente"]},
+            "description": "Obtiene los objetivos nutricionales del paciente"
+          },
+          "response": []
+        },
+        {
+          "name": "14.11 Crear Objetivo Paciente",
+          "request": {
+            "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]},
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente\": {{paciente_id}},\n  \"objetivo\": \"BAJAR_PESO\",\n  \"fecha_inicio\": \"2026-07-01\",\n  \"fecha_meta\": \"2026-12-31\",\n  \"estado\": \"EN_PROGRESO\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/api/objetivos-paciente/", "host": ["{{base_url}}"], "path": ["api", "objetivos-paciente"]},
+            "description": "Crea un objetivo nutricional para un paciente"
+          },
+          "response": []
+        },
+        {
+          "name": "14.12 Listar Logros del Paciente",
+          "request": {
+            "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]},
+            "method": "GET",
+            "url": {"raw": "{{base_url}}/api/logros-paciente/", "host": ["{{base_url}}"], "path": ["api", "logros-paciente"]},
+            "description": "Obtiene los logros y hitos del paciente"
+          },
+          "response": []
+        },
+        {
+          "name": "14.13 Crear Logro Paciente",
+          "request": {
+            "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}"}]},
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente\": {{paciente_id}},\n  \"nombre\": \"Primera semana completada\",\n  \"descripcion\": \"Cumplí con el plan durante la primera semana entera!\",\n  \"fecha_logro\": \"2026-07-07\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/api/logros-paciente/", "host": ["{{base_url}}"], "path": ["api", "logros-paciente"]},
+            "description": "Registra un logro o hito del paciente"
+          },
+          "response": []
         }
       ]
     },

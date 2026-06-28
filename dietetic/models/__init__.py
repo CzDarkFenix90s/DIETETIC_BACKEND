@@ -22,3 +22,6 @@ from .user_profile import UserProfile
 from .horario_nutricionista import HorarioNutricionista
 from .sintoma_diario import SintomaDiario
 from .registro_ejercicio import RegistroEjercicio
+from .preferencia_alimentaria import PreferenciaAlimentaria
+from .objetivo_paciente import ObjetivoPaciente
+from .logro_paciente import LogroPaciente
