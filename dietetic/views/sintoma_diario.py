@@ -2,8 +2,6 @@ from rest_framework import viewsets, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from dietetic.models import SintomaDiario
 from dietetic.serializers.sintoma_diario import SintomaDiarioSerializer
-from dietetic.permissions import IsStaffOrReadOnly
-
 
 class SintomaDiarioViewSet(viewsets.ModelViewSet):
     queryset = SintomaDiario.objects.all()
@@ -23,3 +21,10 @@ class SintomaDiarioViewSet(viewsets.ModelViewSet):
         if hasattr(user, 'paciente_profile'):
             return SintomaDiario.objects.filter(paciente=user.paciente_profile)
         return SintomaDiario.objects.none()
+
+    def perform_create(self, serializer):
+        # Auto-asignar el paciente si el usuario es un paciente
+        if not self.request.user.is_staff and hasattr(self.request.user, 'paciente_profile'):
+            serializer.save(paciente=self.request.user.paciente_profile)
+        else:
+            serializer.save()

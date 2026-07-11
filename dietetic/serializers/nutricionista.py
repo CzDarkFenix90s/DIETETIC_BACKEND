@@ -7,11 +7,12 @@ class NutricionistaSerializer(serializers.ModelSerializer):
     full_name        = serializers.SerializerMethodField()
     fee_with_bonus   = serializers.SerializerMethodField()
     is_experienced   = serializers.SerializerMethodField()
+    user_id          = serializers.PrimaryKeyRelatedField(source='user', read_only=True)
 
     class Meta:
         model  = Nutricionista
         fields = [
-            'id', 'first_name', 'last_name', 'full_name', 'professional_id',
+            'id', 'user_id', 'first_name', 'last_name', 'full_name', 'professional_id',
             'specialty', 'consultation_fee', 'fee_with_bonus', 'consultations_completed',
             'is_experienced', 'is_active', 'created_at',
         ]

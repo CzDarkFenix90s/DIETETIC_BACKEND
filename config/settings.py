@@ -133,6 +133,12 @@ SIMPLE_JWT = {
 # CORS
 CORS_ALLOW_ALL_ORIGINS = True
 
+# Backend de Autenticación Personalizado
+AUTHENTICATION_BACKENDS = [
+    'dietetic.backends.EmailOrUsernameModelBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 # ------------------------------
 # Configuración de Media (Archivos Subidos)
 # ------------------------------

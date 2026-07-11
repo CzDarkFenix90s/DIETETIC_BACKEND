@@ -2,8 +2,6 @@ from rest_framework import viewsets, permissions, filters
 from django_filters.rest_framework import DjangoFilterBackend
 from dietetic.models import RegistroEjercicio
 from dietetic.serializers.registro_ejercicio import RegistroEjercicioSerializer
-from dietetic.permissions import IsStaffOrReadOnly
-
 
 class RegistroEjercicioViewSet(viewsets.ModelViewSet):
     queryset = RegistroEjercicio.objects.all()
@@ -23,3 +21,10 @@ class RegistroEjercicioViewSet(viewsets.ModelViewSet):
         if hasattr(user, 'paciente_profile'):
             return RegistroEjercicio.objects.filter(paciente=user.paciente_profile)
         return RegistroEjercicio.objects.none()
+
+    def perform_create(self, serializer):
+        # Auto-asignar el paciente si el usuario es un paciente
+        if not self.request.user.is_staff and hasattr(self.request.user, 'paciente_profile'):
+            serializer.save(paciente=self.request.user.paciente_profile)
+        else:
+            serializer.save()

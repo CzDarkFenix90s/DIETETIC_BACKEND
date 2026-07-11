@@ -14,13 +14,13 @@ from dietetic.pagination import StandardPagination
 
 
 class AlimentoProgramadoViewSet(viewsets.ModelViewSet):
-    queryset           = AlimentoProgramado.objects.select_related('plan_nutricional').all()
+    queryset           = AlimentoProgramado.objects.select_related('plan_nutricional', 'categoria_alimento').all()
     serializer_class   = AlimentoProgramadoSerializer
     permission_classes = [IsStaffOrReadOnly]
     pagination_class   = StandardPagination
     filter_backends    = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_fields   = ['is_active', 'plan_nutricional', 'meal_type']
-    search_fields      = ['name', 'description', 'plan_nutricional__name']
+    filterset_fields   = ['is_active', 'plan_nutricional', 'meal_type', 'categoria_alimento']
+    search_fields      = ['name', 'description', 'plan_nutricional__name', 'categoria_alimento__name']
     ordering_fields    = ['name', 'portion_grams', 'sequence', 'created_at']
     ordering           = ['sequence']
 

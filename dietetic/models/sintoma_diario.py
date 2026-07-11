@@ -11,6 +11,8 @@ class SintomaDiario(models.Model):
         ('HAMBRE_EXCESIVA', 'Hambre excesiva'),
         ('SUEÑO_MALO', 'Mal sueño'),
         ('SUEÑO_BUENO', 'Buen sueño'),
+        ('EXCELENTE', 'Excelente'),
+        ('DIGESTION', 'Problemas Digestivos'),
     ]
 
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='sintomas_diarios')
