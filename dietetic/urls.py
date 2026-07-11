@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenRefreshView, TokenVerifyView
 
 from dietetic.views.health      import health_check
-from dietetic.views.auth        import RegisterView, LogoutView, PasswordResetRequestView, PasswordResetConfirmView
+from dietetic.views.auth        import RegisterView, VerifyEmailView, LogoutView, PasswordResetRequestView, PasswordResetConfirmView
 from dietetic.views.user                import UserViewSet
 from dietetic.views.plan_nutricional    import PlanNutricionalViewSet
 from dietetic.views.alimento_programado import AlimentoProgramadoViewSet
@@ -66,6 +66,7 @@ router.register('facturas-pago',   FacturaPagoViewSet,          basename='factur
 urlpatterns = [
     path('health/',             health_check),
     path('auth/register/',      RegisterView.as_view(), name='register'),
+    path('auth/verify-email/',  VerifyEmailView.as_view(), name='verify-email'),
     path('auth/login/',         CustomTokenView.as_view()),
     path('auth/token/refresh/', TokenRefreshView.as_view()),
     path('auth/token/verify/',  TokenVerifyView.as_view()),

@@ -19,6 +19,12 @@ class CustomTokenSerializer(TokenObtainPairSerializer):
         token['email']    = user.email
         token['is_staff'] = user.is_staff
 
+        # Agregar is_verified al token
+        if hasattr(user, 'profile'):
+            token['is_verified'] = user.profile.is_verified
+        else:
+            token['is_verified'] = False
+
         # Determinar rol
         if user.is_superuser:
             token['role'] = 'admin'
@@ -35,6 +41,12 @@ class CustomTokenSerializer(TokenObtainPairSerializer):
         data['username'] = self.user.username
         data['email']    = self.user.email
         data['is_staff'] = self.user.is_staff
+
+        # Agregar is_verified a la respuesta
+        if hasattr(self.user, 'profile'):
+            data['is_verified'] = self.user.profile.is_verified
+        else:
+            data['is_verified'] = False
 
         # Determinar rol para el frontend
         if self.user.is_superuser:

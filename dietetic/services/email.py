@@ -33,6 +33,25 @@ def _send_email(subject, template_name, context, to_email):
         return False
 
 
+def send_verification_email(user, code):
+    """
+    Envía un código de verificación de 6 dígitos al correo del usuario.
+    """
+    subject = "Código de Verificación - Dietética App"
+    context = {
+        'user': user,
+        'code': code,
+    }
+    # Intentamos cargar un template específico, si no existe usamos un texto básico
+    try:
+        return _send_email(subject, 'emails/verification', context, user.email)
+    except:
+        from django.core.mail import send_mail
+        from django.conf import settings
+        message = f"Hola {user.username}, tu código de verificación es: {code}"
+        return send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+
+
 def send_welcome_email(user):
     """
     Envía un correo de bienvenida a un nuevo usuario.
