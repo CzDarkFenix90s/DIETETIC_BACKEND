@@ -1,17 +1,18 @@
 # dietetic/serializers/nutricionista.py
-from rest_framework import serializers
 from django.contrib.auth.models import User
+from rest_framework import serializers
+
 from dietetic.models import Nutricionista
 
 
 class NutricionistaSerializer(serializers.ModelSerializer):
-    full_name        = serializers.SerializerMethodField()
-    fee_with_bonus   = serializers.SerializerMethodField()
-    is_experienced   = serializers.SerializerMethodField()
-    user_id          = serializers.PrimaryKeyRelatedField(source='user', read_only=True)
+    full_name = serializers.SerializerMethodField()
+    fee_with_bonus = serializers.SerializerMethodField()
+    is_experienced = serializers.SerializerMethodField()
+    user_id = serializers.PrimaryKeyRelatedField(source='user', read_only=True)
 
     class Meta:
-        model  = Nutricionista
+        model = Nutricionista
         fields = [
             'id', 'user_id', 'first_name', 'last_name', 'full_name', 'professional_id',
             'specialty', 'consultation_fee', 'fee_with_bonus', 'consultations_completed',
@@ -29,7 +30,6 @@ class NutricionistaSerializer(serializers.ModelSerializer):
         return obj.is_experienced
 
     def create(self, validated_data):
-        # Generar un usuario automáticamente para el nutricionista
         first_name = validated_data.get('first_name', '')
         last_name = validated_data.get('last_name', '')
         prof_id = validated_data.get('professional_id', '')
@@ -37,30 +37,27 @@ class NutricionistaSerializer(serializers.ModelSerializer):
         username = f"nutri_{prof_id.lower().replace('-', '_')}"
         email = f"{username}@dietetic.com"
 
-        # Asegurar que el usuario exista y esté ACTIVO
-        user, created = User.objects.get_or_create(
+        user, _ = User.objects.get_or_create(
             username=username,
             defaults={
                 'email': email,
                 'first_name': first_name,
                 'last_name': last_name,
                 'is_staff': True,
-                'is_active': True  # CRÍTICO: Asegurar que esté activo
+                'is_active': True,
             }
         )
 
-        # Forzar activación y password en caso de que ya existiera sin clave
         user.is_active = True
         user.set_password("Nutri123456*")
         user.save()
 
-        # CREAR USERPROFILE (CRÍTICO para login y verificación)
         from dietetic.models.user_profile import UserProfile
         profile, _ = UserProfile.objects.get_or_create(
             user=user,
             defaults={
                 'role': 'NUTRICIONISTA',
-                'is_verified': True
+                'is_verified': True,
             }
         )
         profile.is_verified = True

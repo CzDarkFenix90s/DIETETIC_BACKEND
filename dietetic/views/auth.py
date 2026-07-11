@@ -25,12 +25,18 @@ class RegisterView(APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
 
-        # Asegurar que el perfil exista y generar código
+        # 1. Asegurar que el perfil exista (esto crea el espacio para el código)
         profile, created = UserProfile.objects.get_or_create(user=user)
+
+        # 2. Generar el código de 6 dígitos aleatorio
         code = profile.generate_verification_code()
 
-        # Enviar correo real
-        email_sent = send_verification_email(user, code)
+        # 3. Intentar enviar el Gmail real
+        try:
+            email_sent = send_verification_email(user, code)
+        except Exception as e:
+            print(f"Error crítico de Gmail: {e}")
+            email_sent = False
 
         refresh = RefreshToken.for_user(user)
         return Response({
@@ -41,7 +47,7 @@ class RegisterView(APIView):
             'email':    user.email,
             'is_staff': user.is_staff,
             'is_verified': profile.is_verified,
-            'message': 'Código enviado.' if email_sent else 'Error al enviar email, revisa el servidor.'
+            'message': 'Código enviado al correo.' if email_sent else 'Servidor de correo no disponible temporalmente.'
         }, status=status.HTTP_201_CREATED)
 
 class VerifyEmailView(APIView):
@@ -58,8 +64,7 @@ class VerifyEmailView(APIView):
         except Exception:
             return Response({'error': 'Perfil no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
 
-        print(f"VERIFICANDO CÓDIGO: Recibido={code}, Esperado={profile.verification_code}")
-
+        # VERIFICACIÓN: Código real aleatorio o el código maestro 123456
         if profile.verification_code == code or code == '123456':
             profile.is_verified = True
             profile.verification_code = None
