@@ -37,6 +37,16 @@ class RegisterSerializer(serializers.Serializer):
             last_name=last_name
         )
 
+        # CREAR USERPROFILE (CRÍTICO para login y verificación)
+        from dietetic.models.user_profile import UserProfile
+        UserProfile.objects.get_or_create(
+            user=user,
+            defaults={
+                'role': 'PACIENTE',
+                'is_verified': False  # Los pacientes deben verificarse por email
+            }
+        )
+
         # Crear perfil de Paciente vinculándolo exactamente como Nutricionista
         Paciente.objects.get_or_create(
             user=user,

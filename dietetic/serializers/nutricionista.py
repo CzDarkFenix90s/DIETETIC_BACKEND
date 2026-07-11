@@ -1,5 +1,6 @@
 # dietetic/serializers/nutricionista.py
 from rest_framework import serializers
+from django.contrib.auth.models import User
 from dietetic.models import Nutricionista
 
 
@@ -26,3 +27,40 @@ class NutricionistaSerializer(serializers.ModelSerializer):
 
     def get_is_experienced(self, obj):
         return obj.is_experienced
+
+    def create(self, validated_data):
+        # Generar un usuario automáticamente para el nutricionista
+        # ya que el admin solo provee datos de perfil en el diálogo actual
+        first_name = validated_data.get('first_name', '')
+        last_name = validated_data.get('last_name', '')
+        prof_id = validated_data.get('professional_id', '')
+
+        username = f"nutri_{prof_id.lower().replace('-', '_')}"
+        email = f"{username}@dietetic.com"
+
+        # Si el usuario ya existe, lo usamos, sino lo creamos
+        user, created = User.objects.get_or_create(
+            username=username,
+            defaults={
+                'email': email,
+                'first_name': first_name,
+                'last_name': last_name,
+                'is_staff': True  # Los nutricionistas suelen ser staff en este sistema
+            }
+        )
+        if created:
+            user.set_password("Nutri123456*") # Password por defecto
+            user.save()
+
+        # CREAR USERPROFILE (CRÍTICO para login y verificación)
+        from dietetic.models.user_profile import UserProfile
+        UserProfile.objects.get_or_create(
+            user=user,
+            defaults={
+                'role': 'NUTRICIONISTA',
+                'is_verified': True  # Los creados por admin ya están verificados
+            }
+        )
+
+        validated_data['user'] = user
+        return super().create(validated_data)

@@ -55,8 +55,10 @@ class VerifyEmailView(APIView):
         # Buscar perfil del usuario autenticado
         try:
             profile = request.user.profile
-        except UserProfile.DoesNotExist:
+        except Exception:
             return Response({'error': 'Perfil no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+        print(f"VERIFICANDO CÓDIGO: Recibido={code}, Esperado={profile.verification_code}")
 
         if profile.verification_code == code or code == '123456':
             profile.is_verified = True
