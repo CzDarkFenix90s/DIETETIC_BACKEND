@@ -1,6 +1,6 @@
 import logging
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, send_mail
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
@@ -30,7 +30,13 @@ def _send_email(subject, template_name, context, to_email):
         return True
     except Exception as e:
         logger.error(f"Error al enviar correo a {to_email}: {str(e)}")
-        return False
+        # Fallback a texto simple si falla el template
+        try:
+            simple_message = f"Código: {context.get('code', 'N/A')}"
+            send_mail(subject, simple_message, settings.DEFAULT_FROM_EMAIL, [to_email])
+            return True
+        except:
+            return False
 
 
 def send_verification_email(user, code):
@@ -40,16 +46,15 @@ def send_verification_email(user, code):
     subject = "Código de Verificación - Dietética App"
     context = {
         'user': user,
+        'username': user.username,
         'code': code,
     }
-    # Intentamos cargar un template específico, si no existe usamos un texto básico
-    try:
-        return _send_email(subject, 'emails/verification', context, user.email)
-    except:
-        from django.core.mail import send_mail
-        from django.conf import settings
-        message = f"Hola {user.username}, tu código de verificación es: {code}"
-        return send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email])
+    # Imprimir en consola SIEMPRE para que el desarrollador pueda verlo aunque falle Gmail
+    print("\n" + "="*50)
+    print(f"CÓDIGO DE VERIFICACIÓN PARA {user.email}: {code}")
+    print("="*50 + "\n")
+
+    return _send_email(subject, 'emails/verification', context, user.email)
 
 
 def send_welcome_email(user):

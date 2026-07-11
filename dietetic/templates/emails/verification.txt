@@ -1,0 +1,7 @@
+Hola {{ username }},
+
+Gracias por registrarte en Dietética App. Tu código de verificación es:
+
+{{ code }}
+
+Ingresa este código en la aplicación para activar tu cuenta.
