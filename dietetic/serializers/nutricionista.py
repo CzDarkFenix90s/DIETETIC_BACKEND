@@ -30,7 +30,6 @@ class NutricionistaSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # Generar un usuario automáticamente para el nutricionista
-        # ya que el admin solo provee datos de perfil en el diálogo actual
         first_name = validated_data.get('first_name', '')
         last_name = validated_data.get('last_name', '')
         prof_id = validated_data.get('professional_id', '')
@@ -38,29 +37,34 @@ class NutricionistaSerializer(serializers.ModelSerializer):
         username = f"nutri_{prof_id.lower().replace('-', '_')}"
         email = f"{username}@dietetic.com"
 
-        # Si el usuario ya existe, lo usamos, sino lo creamos
+        # Asegurar que el usuario exista y esté ACTIVO
         user, created = User.objects.get_or_create(
             username=username,
             defaults={
                 'email': email,
                 'first_name': first_name,
                 'last_name': last_name,
-                'is_staff': True  # Los nutricionistas suelen ser staff en este sistema
+                'is_staff': True,
+                'is_active': True  # CRÍTICO: Asegurar que esté activo
             }
         )
-        if created:
-            user.set_password("Nutri123456*") # Password por defecto
-            user.save()
+
+        # Forzar activación y password en caso de que ya existiera sin clave
+        user.is_active = True
+        user.set_password("Nutri123456*")
+        user.save()
 
         # CREAR USERPROFILE (CRÍTICO para login y verificación)
         from dietetic.models.user_profile import UserProfile
-        UserProfile.objects.get_or_create(
+        profile, _ = UserProfile.objects.get_or_create(
             user=user,
             defaults={
                 'role': 'NUTRICIONISTA',
-                'is_verified': True  # Los creados por admin ya están verificados
+                'is_verified': True
             }
         )
+        profile.is_verified = True
+        profile.save()
 
         validated_data['user'] = user
         return super().create(validated_data)
