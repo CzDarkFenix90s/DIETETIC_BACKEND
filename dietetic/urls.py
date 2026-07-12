@@ -32,6 +32,7 @@ from dietetic.views.registro_ejercicio import RegistroEjercicioViewSet
 from dietetic.views.preferencia_alimentaria import PreferenciaAlimentariaViewSet
 from dietetic.views.objetivo_paciente import ObjetivoPacienteViewSet
 from dietetic.views.logro_paciente import LogroPacienteViewSet
+from dietetic.views.suscripcion_plan import SuscripcionPlanViewSet
 from dietetic.serializers.auth          import CustomTokenView
 
 router = DefaultRouter()
@@ -41,6 +42,7 @@ router.register('pacientes',       PacienteViewSet,             basename='pacien
 router.register('nutricionistas',  NutricionistaViewSet,        basename='nutricionista')
 router.register('horarios-nutricionista', HorarioNutricionistaViewSet, basename='horario-nutricionista')
 router.register('planes',          PlanNutricionalViewSet,      basename='plan-nutricional')
+router.register('suscripciones',   SuscripcionPlanViewSet,      basename='suscripcion-plan')
 router.register('dias-plan',       DiaPlanViewSet,              basename='dia-plan')
 router.register('momentos-comida', MomentoComidaViewSet,        basename='momento-comida')
 router.register('categorias-alimentos', CategoriaAlimentoViewSet, basename='categoria-alimento')

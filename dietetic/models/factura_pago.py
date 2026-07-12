@@ -1,5 +1,6 @@
 from django.db import models
 from .consulta_dietetica import ConsultaDietetica
+from .suscripcion_plan import SuscripcionPlan
 
 
 class FacturaPago(models.Model):
@@ -12,7 +13,16 @@ class FacturaPago(models.Model):
     consulta = models.ForeignKey(
         ConsultaDietetica,
         on_delete=models.CASCADE,
-        related_name='facturas_pago'
+        related_name='facturas_pago',
+        null=True,
+        blank=True
+    )
+    suscripcion = models.ForeignKey(
+        SuscripcionPlan,
+        on_delete=models.CASCADE,
+        related_name='facturas_pago',
+        null=True,
+        blank=True
     )
     monto = models.DecimalField(max_digits=10, decimal_places=2)
     fecha_pago = models.DateTimeField(null=True, blank=True)
@@ -27,4 +37,5 @@ class FacturaPago(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'Factura {self.consulta} - {self.estado_pago}'
+        rel = self.consulta if self.consulta else self.suscripcion
+        return f'Factura {rel} - {self.estado_pago}'

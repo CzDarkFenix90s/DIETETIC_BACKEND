@@ -1,7 +1,8 @@
-from rest_framework import viewsets, permissions
-from dietetic.models import RegistroAgua
+import uuid
+from rest_framework import viewsets, permissions, status
+from rest_framework.response import Response
+from dietetic.models import RegistroAgua, Paciente
 from dietetic.serializers.registro_agua import RegistroAguaSerializer
-from dietetic.permissions import IsStaffOrReadOnly
 
 
 class RegistroAguaViewSet(viewsets.ModelViewSet):
@@ -10,6 +11,19 @@ class RegistroAguaViewSet(viewsets.ModelViewSet):
     filterset_fields = ['paciente', 'fecha']
 
     def get_permissions(self):
-        if self.action in ['create', 'update', 'partial_update', 'destroy']:
-            return [permissions.IsAuthenticated()]
         return [permissions.IsAuthenticated()]
+
+    def perform_create(self, serializer):
+        user = self.request.user
+
+        # BUSCADOR Y CREADOR AUTOMÁTICO DE PERFIL (Auto-Sanación de BD)
+        paciente, created = Paciente.objects.get_or_create(
+            user=user,
+            defaults={
+                'patient_code': f"PAC-{uuid.uuid4().hex[:6].upper()}",
+                'first_name': user.username,
+                'status': 'activo'
+            }
+        )
+
+        serializer.save(paciente=paciente)

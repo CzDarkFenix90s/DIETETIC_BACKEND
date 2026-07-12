@@ -10,11 +10,12 @@ class NutricionistaSerializer(serializers.ModelSerializer):
     fee_with_bonus = serializers.SerializerMethodField()
     is_experienced = serializers.SerializerMethodField()
     user_id = serializers.PrimaryKeyRelatedField(source='user', read_only=True)
+    username = serializers.CharField(write_only=True, required=False)
 
     class Meta:
         model = Nutricionista
         fields = [
-            'id', 'user_id', 'first_name', 'last_name', 'full_name', 'professional_id',
+            'id', 'user_id', 'username', 'first_name', 'last_name', 'full_name', 'professional_id',
             'specialty', 'consultation_fee', 'fee_with_bonus', 'consultations_completed',
             'is_experienced', 'is_active', 'created_at',
         ]
@@ -33,8 +34,8 @@ class NutricionistaSerializer(serializers.ModelSerializer):
         first_name = validated_data.get('first_name', '')
         last_name = validated_data.get('last_name', '')
         prof_id = validated_data.get('professional_id', '')
+        username = validated_data.pop('username', f"nutri_{prof_id.lower().replace('-', '_')}")
 
-        username = f"nutri_{prof_id.lower().replace('-', '_')}"
         email = f"{username}@dietetic.com"
 
         user, _ = User.objects.get_or_create(

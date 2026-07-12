@@ -7,7 +7,7 @@ from dietetic.permissions import IsStaffOrReadOnly
 class FacturaPagoViewSet(viewsets.ModelViewSet):
     queryset = FacturaPago.objects.all()
     serializer_class = FacturaPagoSerializer
-    filterset_fields = ['consulta', 'estado_pago']
+    filterset_fields = ['consulta', 'suscripcion', 'estado_pago']
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
