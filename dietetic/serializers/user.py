@@ -37,16 +37,6 @@ class RegisterSerializer(serializers.Serializer):
             last_name=last_name
         )
 
-        # CREAR USERPROFILE (CRÍTICO para login y verificación)
-        from dietetic.models.user_profile import UserProfile
-        UserProfile.objects.get_or_create(
-            user=user,
-            defaults={
-                'role': 'PACIENTE',
-                'is_verified': False  # Los pacientes deben verificarse por email
-            }
-        )
-
         # Crear perfil de Paciente vinculándolo exactamente como Nutricionista
         Paciente.objects.get_or_create(
             user=user,
@@ -84,10 +74,12 @@ class UserSerializer(serializers.ModelSerializer):
 
 class UserProfileSerializer(serializers.ModelSerializer):
     role = serializers.SerializerMethodField()
+    avatar_url = serializers.SerializerMethodField()
+    avatar = serializers.ImageField(write_only=True, required=False)
 
     class Meta:
         model  = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role', 'avatar_url', 'avatar']
         read_only_fields = ['id']
 
     def get_role(self, obj):
@@ -98,6 +90,25 @@ class UserProfileSerializer(serializers.ModelSerializer):
         if hasattr(obj, 'paciente_profile'):
             return 'paciente'
         return 'paciente'
+        
+    def get_avatar_url(self, obj):
+        if hasattr(obj, 'profile') and obj.profile.avatar:
+            request = self.context.get('request')
+            if request:
+                return request.build_absolute_uri(obj.profile.avatar.url)
+        return None
+
+    def update(self, instance, validated_data):
+        avatar = validated_data.pop('avatar', None)
+        instance = super().update(instance, validated_data)
+        
+        if avatar is not None:
+            from dietetic.models.user_profile import UserProfile
+            profile, created = UserProfile.objects.get_or_create(user=instance)
+            profile.avatar = avatar
+            profile.save()
+            
+        return instance
 
     def validate_email(self, value):
         request = self.context.get('request')
