@@ -10,6 +10,18 @@ class EvaluacionAntropometricaViewSet(viewsets.ModelViewSet):
     serializer_class = EvaluacionAntropometricaSerializer
     filterset_fields = ['consulta']
 
+    def get_queryset(self):
+        qs = super().get_queryset()
+        user_id = self.request.query_params.get('user_id')
+        if user_id:
+            return qs.filter(consulta__paciente__user_id=user_id)
+
+        # Por defecto, si es paciente, solo ve lo suyo
+        if not self.request.user.is_staff:
+            return qs.filter(consulta__paciente__user=self.request.user)
+
+        return qs
+
     def get_permissions(self):
         # Aseguramos que cualquier paciente autenticado pueda subir sus datos
         return [permissions.IsAuthenticated()]

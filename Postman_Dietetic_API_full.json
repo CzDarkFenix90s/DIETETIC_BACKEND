@@ -1,0 +1,1211 @@
+{
+  "info": {
+    "_postman_id": "dietetic-api-full-001",
+    "name": "Dietetic API Full Collection",
+    "description": "Colección Postman con endpoints principales de la API Dietetic y ejemplos mínimos de datos para cada endpoint.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Autenticación",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "health", ""]
+            },
+            "description": "Verifica que el backend esté funcionando."
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.access) { pm.collectionVariables.set('token', jsonData.access); }",
+                  "if (jsonData.refresh) { pm.collectionVariables.set('refresh_token', jsonData.refresh); }",
+                  "if (jsonData.user_id) { pm.collectionVariables.set('user_id', jsonData.user_id); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"nutri_ana\",\n  \"email\": \"ana.gomez@dietetic.com\",\n  \"password\": \"Segura123.\",\n  \"password2\": \"Segura123.\",\n  \"first_name\": \"Ana\",\n  \"last_name\": \"Gómez\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/register/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "register", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.access) { pm.collectionVariables.set('token', jsonData.access); }",
+                  "if (jsonData.refresh) { pm.collectionVariables.set('refresh_token', jsonData.refresh); }"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"nutri_ana\",\n  \"password\": \"Segura123.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/token/refresh/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "token", "refresh", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{token}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/token/verify/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "token", "verify", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh\": \"{{refresh_token}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/logout/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "logout", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Password Reset Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"ana.gomez@dietetic.com\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/password-reset/request/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "password-reset", "request", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Password Reset Confirm",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"uidb64\": \"CHANGE_ME\",\n  \"token\": \"CHANGE_ME\",\n  \"new_password\": \"NuevaClave123!\",\n  \"new_password_confirm\": \"NuevaClave123!\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/password-reset/confirm/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "password-reset", "confirm", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"123456\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/verify-email/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "verify-email", ""]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Recursos",
+      "item": [
+        {
+          "name": "List usuarios",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/users/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create usuarios",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"usuario_nuevo\",\n  \"email\": \"usuario.nuevo@dietetic.com\",\n  \"first_name\": \"Usuario\",\n  \"last_name\": \"Nuevo\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "users", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List profiles",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/profiles/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "profiles", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create profiles",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{user_id}}\",\n  \"username\": \"nutri_ana\",\n  \"email\": \"ana.gomez@dietetic.com\",\n  \"role\": \"nutricionista\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/profiles/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "profiles", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List pacientes",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/pacientes/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pacientes", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create pacientes",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{user_id}}\",\n  \"patient_code\": \"PAC-0001\",\n  \"first_name\": \"Ana\",\n  \"last_name\": \"Gómez\",\n  \"age\": 30,\n  \"status\": \"activo\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/pacientes/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "pacientes", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List nutricionistas",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/nutricionistas/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "nutricionistas", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create nutricionistas",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": \"{{user_id}}\",\n  \"username\": \"nutri_ana\",\n  \"password\": \"Segura123.\",\n  \"first_name\": \"Ana\",\n  \"last_name\": \"Gómez\",\n  \"professional_id\": \"PROF-001\",\n  \"specialty\": \"Nutrición deportiva\",\n  \"consultation_fee\": 120.0\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/nutricionistas/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "nutricionistas", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List horarios-nutricionista",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/horarios-nutricionista/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "horarios-nutricionista", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create horarios-nutricionista",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nutricionista_id\": \"{{nutricionista_id}}\",\n  \"dia_semana\": \"Lunes\",\n  \"hora_inicio\": \"08:00\",\n  \"hora_fin\": \"12:00\",\n  \"is_active\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/horarios-nutricionista/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "horarios-nutricionista", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List planes",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/planes/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "planes", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create planes",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Plan Saludable\",\n  \"description\": \"Plan de ejemplo para dieta equilibrada.\",\n  \"goal\": \"Mejorar hábitos alimenticios\",\n  \"target_calories\": 1800,\n  \"duration_weeks\": 8,\n  \"estimated_cost\": 220.0,\n  \"is_active\": true\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/planes/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "planes", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List suscripciones",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/suscripciones/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "suscripciones", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create suscripciones",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente\": \"{{paciente_id}}\",\n  \"plan\": \"{{plan_id}}\",\n  \"estado\": \"activo\",\n  \"monto_pagado\": 299.99,\n  \"fecha_fin\": \"2026-08-15\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/suscripciones/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "suscripciones", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List dias-plan",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/dias-plan/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "dias-plan", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create dias-plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plan_nutricional_id\": \"{{plan_id}}\",\n  \"nombre_dia\": \"Lunes\",\n  \"orden\": 1\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/dias-plan/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "dias-plan", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List momentos-comida",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/momentos-comida/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "momentos-comida", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create momentos-comida",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dia_plan_id\": \"{{diaplan_id}}\",\n  \"nombre_momento\": \"Desayuno\",\n  \"orden\": 1\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/momentos-comida/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "momentos-comida", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List categorias-alimentos",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/categorias-alimentos/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categorias-alimentos", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create categorias-alimentos",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Frutas\",\n  \"description\": \"Alimentos ricos en vitaminas.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/categorias-alimentos/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categorias-alimentos", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List alimentos",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/alimentos/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "alimentos", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create alimentos",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Manzana\",\n  \"description\": \"Manzana roja fresca.\",\n  \"meal_type\": \"desayuno\",\n  \"portion_grams\": 150,\n  \"calories\": 95,\n  \"protein\": 0.4,\n  \"carbs\": 25,\n  \"fat\": 0.3,\n  \"category\": \"{{categoria_id}}\",\n  \"plan_nutricional\": \"{{plan_id}}\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/alimentos/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "alimentos", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List detalles-alimentos-plan",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/detalles-alimentos-plan/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "detalles-alimentos-plan", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create detalles-alimentos-plan",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"momento_comida_id\": \"{{momento_id}}\",\n  \"alimento_programado_id\": \"{{alimento_id}}\",\n  \"cantidad_gramos\": 150,\n  \"orden\": 1\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/detalles-alimentos-plan/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "detalles-alimentos-plan", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List consultas",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/consultas/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "consultas", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create consultas",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"agendada\",\n  \"scheduled_time\": \"2026-07-20T10:00:00Z\",\n  \"plan_nutricional\": \"{{plan_id}}\",\n  \"nutricionista\": \"{{nutricionista_id}}\",\n  \"paciente\": \"{{paciente_id}}\",\n  \"duration_minutes\": 60,\n  \"is_delayed\": false\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/consultas/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "consultas", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List notas-consulta",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notas-consulta/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notas-consulta", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create notas-consulta",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"consulta_id\": \"{{consulta_id}}\",\n  \"diagnostico\": \"Hipótesis de estudio\",\n  \"observaciones\": \"Paciente tiene hábitos irregulares.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/notas-consulta/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notas-consulta", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List historiales-clinicos",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/historiales-clinicos/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "historiales-clinicos", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create historiales-clinicos",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente_id\": \"{{paciente_id}}\",\n  \"alergias\": \"Ninguna\",\n  \"enfermedades_cronicas\": \"Hipertensión\",\n  \"antecedentes_familiares\": \"Diabetes\",\n  \"medicamentos_actuales\": \"Ninguno\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/historiales-clinicos/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "historiales-clinicos", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List evaluaciones-antropometricas",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/evaluaciones-antropometricas/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "evaluaciones-antropometricas", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create evaluaciones-antropometricas",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"consulta_id\": \"{{consulta_id}}\",\n  \"peso\": 70.5,\n  \"altura\": 170,\n  \"grasa_corporal_porcentaje\": 22.0,\n  \"masa_muscular_kg\": 30.0\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/evaluaciones-antropometricas/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "evaluaciones-antropometricas", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List progresos-fotos",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/progresos-fotos/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "progresos-fotos", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create progresos-fotos",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente_id\": \"{{paciente_id}}\",\n  \"foto\": \"https://example.com/foto-progreso.jpg\",\n  \"descripcion\": \"Foto de progreso inicial.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/progresos-fotos/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "progresos-fotos", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List rutinas-ejercicio",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/rutinas-ejercicio/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rutinas-ejercicio", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create rutinas-ejercicio",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plan_nutricional_id\": \"{{plan_id}}\",\n  \"descripcion_rutina\": \"Circuito básico de fuerza.\",\n  \"dias_semana\": \"Lunes,Miércoles,Viernes\",\n  \"duracion_minutos\": 45\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/rutinas-ejercicio/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "rutinas-ejercicio", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List registros-ejercicio",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/registros-ejercicio/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "registros-ejercicio", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create registros-ejercicio",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente_id\": \"{{paciente_id}}\",\n  \"rutina_ejercicio_id\": \"{{rutina_id}}\",\n  \"fecha\": \"2026-07-13\",\n  \"completado\": true,\n  \"notas\": \"Rutina completada sin contratiempos.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/registros-ejercicio/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "registros-ejercicio", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List sintomas-diarios",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/sintomas-diarios/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "sintomas-diarios", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create sintomas-diarios",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente_id\": \"{{paciente_id}}\",\n  \"fecha\": \"2026-07-13\",\n  \"sintoma\": \"Cansancio\",\n  \"notas\": \"Paciente con niveles bajos de energía.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/sintomas-diarios/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "sintomas-diarios", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List preferencias-alimentarias",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/preferencias-alimentarias/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "preferencias-alimentarias", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create preferencias-alimentarias",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente_id\": \"{{paciente_id}}\",\n  \"tipo_preferencia\": \"vegetariana\",\n  \"descripcion\": \"Prefiere evitar carne roja.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/preferencias-alimentarias/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "preferencias-alimentarias", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List objetivos-paciente",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/objetivos-paciente/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "objetivos-paciente", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create objetivos-paciente",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente_id\": \"{{paciente_id}}\",\n  \"objetivo\": \"Reducir peso\",\n  \"fecha_inicio\": \"2026-07-13\",\n  \"fecha_meta\": \"2026-09-13\",\n  \"estado\": \"activo\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/objetivos-paciente/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "objetivos-paciente", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List seguimientos-consumo",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/seguimientos-consumo/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "seguimientos-consumo", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create seguimientos-consumo",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente_id\": \"{{paciente_id}}\",\n  \"momento_comida_id\": \"{{momento_id}}\",\n  \"fecha\": \"2026-07-13\",\n  \"completado\": true,\n  \"notas\": \"Consumo registrado según plan.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/seguimientos-consumo/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "seguimientos-consumo", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List registros-agua",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/registros-agua/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "registros-agua", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create registros-agua",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente_id\": \"{{paciente_id}}\",\n  \"fecha\": \"2026-07-13\",\n  \"cantidad_ml\": 2000\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/registros-agua/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "registros-agua", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List mensajes-chat",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/mensajes-chat/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "mensajes-chat", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create mensajes-chat",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"remitente_id\": \"{{user_id}}\",\n  \"destinatario_id\": \"{{paciente_id}}\",\n  \"contenido\": \"Hola, consulta de seguimiento.\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/mensajes-chat/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "mensajes-chat", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List notificaciones-push",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notificaciones-push/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notificaciones-push", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create notificaciones-push",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"paciente_id\": \"{{paciente_id}}\",\n  \"titulo\": \"Recordatorio\",\n  \"mensaje\": \"No olvides tu próxima consulta.\",\n  \"leido\": false\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/notificaciones-push/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notificaciones-push", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "List facturas-pago",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/facturas-pago/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "facturas-pago", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create facturas-pago",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"consulta_id\": \"{{consulta_id}}\",\n  \"suscripcion_id\": \"{{suscripcion_id}}\",\n  \"monto\": 199.99,\n  \"fecha_pago\": \"2026-07-13\",\n  \"estado_pago\": \"pagado\"\n}",
+              "options": { "raw": { "language": "json" } }
+            },
+            "url": {
+              "raw": "{{base_url}}/api/facturas-pago/",
+              "host": ["{{base_url}}"],
+              "path": ["api", "facturas-pago", ""]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000" },
+    { "key": "token", "value": "" },
+    { "key": "refresh_token", "value": "" },
+    { "key": "user_id", "value": "" },
+    { "key": "paciente_id", "value": "" },
+    { "key": "nutricionista_id", "value": "" },
+    { "key": "plan_id", "value": "" },
+    { "key": "consulta_id", "value": "" },
+    { "key": "suscripcion_id", "value": "" },
+    { "key": "diaplan_id", "value": "" },
+    { "key": "momento_id", "value": "" },
+    { "key": "alimento_id", "value": "" },
+    { "key": "rutina_id", "value": "" },
+    { "key": "categoria_id", "value": "" }
+  ]
+}
