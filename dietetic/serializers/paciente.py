@@ -60,9 +60,9 @@ class AddSeguimientoNutricionalSerializer(serializers.Serializer):
 
     def validate_patient_id(self, value):
         try:
-            Paciente.objects.get(pk=value, status='activo')
+            Paciente.objects.get(pk=value)
         except Paciente.DoesNotExist:
             raise serializers.ValidationError(
-                f'Paciente con ID {value} no encontrado o no está activo.'
+                f'Paciente con ID {value} no encontrado.'
             )
         return value
