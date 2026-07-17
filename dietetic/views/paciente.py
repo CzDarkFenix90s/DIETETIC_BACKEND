@@ -19,6 +19,9 @@ class PacienteViewSet(viewsets.ModelViewSet):
         if self.action in ['create', 'add_seguimiento']:
             # Permitir a cualquier usuario autenticado crear su perfil o añadir seguimientos
             return [permissions.IsAuthenticated()]
+        if self.action in ['retrieve', 'update', 'partial_update']:
+            from dietetic.permissions import IsOwnerOrStaff
+            return [IsOwnerOrStaff()]
         return [IsStaffOrReadOnly()]
 
     @action(detail=True, methods=['post'], url_path='add-seguimiento')
