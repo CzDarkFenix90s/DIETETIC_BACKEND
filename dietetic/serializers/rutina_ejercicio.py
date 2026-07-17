@@ -1,8 +1,9 @@
 from rest_framework import serializers
-from dietetic.models import RutinaEjercicio
+from dietetic.models import RutinaEjercicio, PlanNutricional
 
 
 class RutinaEjercicioSerializer(serializers.ModelSerializer):
+    plan_nutricional = serializers.PrimaryKeyRelatedField(queryset=PlanNutricional.objects.all(), required=False)
     plan_nutricional_id = serializers.PrimaryKeyRelatedField(source='plan_nutricional', read_only=True)
     name = serializers.CharField(source='plan_nutricional.name', read_only=True)
     description = serializers.CharField(source='descripcion_rutina')
@@ -12,7 +13,7 @@ class RutinaEjercicioSerializer(serializers.ModelSerializer):
     class Meta:
         model = RutinaEjercicio
         fields = [
-            'id', 'plan_nutricional_id', 'name', 'description',
+            'id', 'plan_nutricional', 'plan_nutricional_id', 'name', 'description',
             'difficulty', 'duration_minutes', 'dias_semana',
             'created_at', 'updated_at'
         ]
