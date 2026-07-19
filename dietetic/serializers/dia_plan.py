@@ -7,5 +7,5 @@ class DiaPlanSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DiaPlan
-        fields = ['id', 'plan_nutricional_id', 'nombre_dia', 'orden', 'created_at', 'updated_at']
+        fields = ['id', 'plan_nutricional', 'plan_nutricional_id', 'nombre_dia', 'orden', 'created_at', 'updated_at']
         read_only_fields = ['id', 'created_at', 'updated_at']

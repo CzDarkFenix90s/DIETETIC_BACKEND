@@ -9,7 +9,7 @@ class DetallePlanAlimentoSerializer(serializers.ModelSerializer):
     class Meta:
         model = DetallePlanAlimento
         fields = [
-            'id', 'momento_comida_id', 'alimento_programado_id',
+            'id', 'momento_comida', 'momento_comida_id', 'alimento_programado', 'alimento_programado_id',
             'cantidad_gramos', 'orden', 'created_at'
         ]
         read_only_fields = ['id', 'created_at']
